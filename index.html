@@ -23,27 +23,12 @@ form{display:flex;flex-direction:column;gap:.8rem;}
 input,textarea,select{padding:.7rem;border-radius:5px;border:1px solid #f5c518;background:#0a0a0a;color:#f5c518;resize:none;}
 input:focus,textarea:focus,select:focus{outline:none;border-color:#d4a100;}
 footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size:.9rem;margin-top:2rem;}
-/* Sign-in Modal */
-#signinModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:flex;justify-content:center;align-items:center;z-index:10;}
-#signinModal .modal-content{background:#1a1a1a;padding:2rem;border-radius:12px;width:300px;display:flex;flex-direction:column;gap:1rem;text-align:center;}
-#signinModal input{width:100%;}
-#signinModal button{margin-top:1rem;}
 </style>
 </head>
 <body>
 
 <!-- Bear Particle Canvas -->
 <canvas id="bearCanvas"></canvas>
-
-<!-- Sign-In Modal -->
-<div id="signinModal">
-  <div class="modal-content">
-    <h2>Staff Sign-In</h2>
-    <input type="text" id="staffUser" placeholder="Username">
-    <input type="password" id="staffPass" placeholder="Password">
-    <button id="signinBtn">Sign In</button>
-  </div>
-</div>
 
 <header>
   <h1>Golden State RP</h1>
@@ -55,13 +40,12 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <li class="tab-link" data-tab="discord">Discord</li>
       <li class="tab-link" data-tab="changelog">Changelog</li>
       <li class="tab-link" data-tab="departments">Departments</li>
-      <li class="tab-link" data-tab="civilian">Civilian</li>
       <li class="tab-link" data-tab="teams">Teams</li>
     </ul>
   </nav>
 </header>
 
-<main style="display:none;">
+<main>
 
 <!-- Gangs Tab -->
 <section id="gangs" class="tab-content active">
@@ -73,6 +57,7 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <button class="gang-btn" data-gang="graveDiggas">Grave Diggas</button>
     </div>
   </div>
+  <!-- Gang forms -->
   <div class="gang-form" id="hustlers" style="display:none;">
     <div class="card">
       <h3>400 Hustlers Application</h3>
@@ -114,10 +99,11 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
   </div>
 </section>
 
-<!-- Civilian Ops Tab -->
+<!-- Civilian Tab -->
 <section id="civ" class="tab-content">
-  <div class="card"><h2>Civilian Jobs</h2><p>All civilian occupations and their details in-game.</p></div>
-  <div class="card"><h2>Events & Activities</h2><p>Community events and civilian operations happening now.</p></div>
+  <div class="card"><h2>Civilian Ops</h2>
+    <p>Dept Of Justice, San Andreas Military, SADOT Gruppe 6 and more civilian organizations.</p>
+  </div>
 </section>
 
 <!-- Support Tickets Tab -->
@@ -164,39 +150,36 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
 <!-- Departments Tab -->
 <section id="departments" class="tab-content">
   <div class="card">
-    <h3>Apply to a Department</h3>
-    <div style="display:flex;gap:1rem;margin-bottom:1rem;">
-      <button class="dept-btn" data-dept="SASP">SASP</button>
-      <button class="dept-btn" data-dept="BCSO">BCSO</button>
-      <button class="dept-btn" data-dept="LSPD">LSPD</button>
-    </div>
-    <div class="dept-form-container"></div>
-  </div>
-</section>
-
-<!-- Civilian / Organizations Tab -->
-<section id="civilian" class="tab-content">
-  <div class="card">
-    <h3>Apply to Civilian Departments</h3>
-    <div style="display:flex;gap:1rem;margin-bottom:1rem;">
-      <button class="civ-btn" data-civ="DeptOfJustice">Dept Of Justice</button>
-      <button class="civ-btn" data-civ="SAMilitary">San Andreas Military</button>
-      <button class="civ-btn" data-civ="SADOTGruppe6">SADOT Gruppe 6</button>
-    </div>
-    <div class="civ-form-container"></div>
+    <h3>Department Applications</h3>
+    <form data-dept="SASP">
+      <input type="text" name="name" placeholder="In-Game Name" required>
+      <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
+      <select name="department">
+        <option value="SASP">SASP</option>
+        <option value="BCSO">BCSO</option>
+        <option value="LSPD">LSPD</option>
+      </select>
+      <textarea name="motivation" placeholder="Why join?" required></textarea>
+      <button type="submit">Submit Application</button>
+    </form>
   </div>
 </section>
 
 <!-- Teams Tab -->
 <section id="teams" class="tab-content">
   <div class="card">
-    <h3>Apply to Teams</h3>
-    <div style="display:flex;gap:1rem;margin-bottom:1rem;">
-      <button class="team-btn" data-team="EventTeam">Event Team</button>
-      <button class="team-btn" data-team="StreamTeam">Stream Team</button>
-      <button class="team-btn" data-team="StaffTeam">Staff Team</button>
-    </div>
-    <div class="team-form-container"></div>
+    <h3>Team Applications</h3>
+    <form data-team="General">
+      <input type="text" name="name" placeholder="In-Game Name" required>
+      <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
+      <select name="team">
+        <option value="Event Team">Event Team</option>
+        <option value="Stream Team">Stream Team</option>
+        <option value="Staff Team">Staff Team</option>
+      </select>
+      <textarea name="motivation" placeholder="Why join this team?" required></textarea>
+      <button type="submit">Submit Application</button>
+    </form>
   </div>
 </section>
 
@@ -204,41 +187,103 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
 <footer>&copy; 2026 Golden State Roleplay | All Rights Reserved</footer>
 
 <script>
-// ===== Staff Sign-In =====
-const STAFF_USER="admin",STAFF_PASS="password123",signinModal=document.getElementById("signinModal"),mainContent=document.querySelector("main");
-document.getElementById("signinBtn").addEventListener("click",()=>{const u=document.getElementById("staffUser").value,p=document.getElementById("staffPass").value;u===STAFF_USER&&p===STAFF_PASS?(signinModal.style.display="none",mainContent.style.display="block"):alert("Invalid credentials")});
-
 // ===== Tabs =====
-const tabs=document.querySelectorAll(".tab-link"),contents=document.querySelectorAll(".tab-content");
-tabs.forEach(tab=>{tab.addEventListener("click",()=>{tabs.forEach(t=>t.classList.remove("active"));tab.classList.add("active");contents.forEach(c=>c.classList.remove("active"));document.getElementById(tab.dataset.tab).classList.add("active")})});
+const tabs = document.querySelectorAll('.tab-link');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    contents.forEach(c => c.classList.remove('active'));
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
 
 // ===== Gang Selection =====
-const gangButtons=document.querySelectorAll(".gang-btn"),gangForms=document.querySelectorAll(".gang-form");
-gangButtons.forEach(btn=>{btn.addEventListener("click",()=>{gangForms.forEach(f=>f.style.display="none");document.getElementById(btn.dataset.gang).style.display="block"})});
+const gangButtons = document.querySelectorAll('.gang-btn');
+const gangForms = document.querySelectorAll('.gang-form');
+gangButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    gangForms.forEach(f => f.style.display = 'none');
+    document.getElementById(btn.dataset.gang).style.display = 'block';
+  });
+});
 
 // ===== Gang Applications Webhook =====
-const gangFormsForms=document.querySelectorAll(".gang-form form");
-gangFormsForms.forEach(form=>{form.addEventListener("submit",async e=>{e.preventDefault();const data=new FormData(form),discordID=data.get("discord").replace(/[^0-9]/g,""),mention=`<@${discordID}>`,payload={content:`**New Gang Application: ${form.dataset.gang}**\n**Name:** ${data.get("name")}\n**Discord:** ${mention}\n**Motivation:** ${data.get("motivation")}\n${data.get("role")?"**Role:** "+data.get("role")+"\n":""}${data.get("territory")?"**Territory:** "+data.get("territory")+"\n":""}${data.get("activities")?"**Activities:** "+data.get("activities")+"\n":""}**Scenario:** ${data.get("scenario")}`};try{await fetch("https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});alert("Application submitted! Staff will review and respond.");form.reset()}catch(err){alert("Failed to submit. Check webhook URL."),console.error(err)}})});
+const gangFormsForms = document.querySelectorAll('.gang-form form');
+gangFormsForms.forEach(form => {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const discordID = data.get('discord').replace(/[^0-9]/g,'');
+    const mention = `<@${discordID}>`;
+    const payload = {
+      content: `**New Gang Application: ${form.dataset.gang}**\n` +
+               `**Name:** ${data.get('name')}\n` +
+               `**Discord:** ${mention}\n` +
+               `**Motivation:** ${data.get('motivation')}\n` +
+               `${data.get('role') ? '**Role:** ' + data.get('role') + '\n' : ''}` +
+               `${data.get('territory') ? '**Territory:** ' + data.get('territory') + '\n' : ''}` +
+               `${data.get('activities') ? '**Activities:** ' + data.get('activities') + '\n' : ''}` +
+               `**Scenario:** ${data.get('scenario')}`
+    };
+    try {
+      await fetch('https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      alert('Application submitted! Staff will review and respond.');
+      form.reset();
+    } catch(err){ alert('Failed to submit. Check webhook URL.'); console.error(err); }
+  });
+});
 
 // ===== Support Tickets =====
-const webhooks={"Internal Operations":"https://discord.com/api/webhooks/1486618386384556102/c5tVM_ZjyBGvVr2t6HSGRVwe71Bx1_TTICbzZN3Z7h4rfxtBU89xCEZzqCmQqT5NfuxR","Staff Director":"https://discord.com/api/webhooks/1486618385306484758/fyhkkHEJdkcES1WPqD5TQ0tI1PVGPm7MGMNlJg-xwXKNk1N0OOGwTY98WFf7hHYNRL6F","ESD":"https://discord.com/api/webhooks/1486618351576027227/1333a4BB4USO4ivks7GOYwzDTtBlPXScohxWtO-FcNPKWXf2tCJue3_YdaSu4z4mWftq","Support Director":"YOUR_SUPPORT_DIRECTOR_WEBHOOK","Support":"YOUR_SUPPORT_WEBHOOK"};
-document.getElementById("supportTicketForm").addEventListener("submit",async e=>{e.preventDefault();const form=e.target,data=new FormData(form),discordID=data.get("discord").replace(/[^0-9]/g,""),department=data.get("department"),issue=data.get("issue");if(!discordID||!department||!issue)return void alert("Please fill out all fields.");const payload={content:`**New Support Ticket: ${department}**\n**Discord:** <@${discordID}>\n**Issue:** ${issue}\n\nStaff: Please respond to this ticket.`};try{await fetch(webhooks[department],{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}),alert("Ticket submitted! Staff will contact you via Discord."),form.reset()}catch(err){console.error(err),alert("Failed to submit ticket. Check webhook.")}});
+const webhooks = {
+  "Internal Operations": "https://discord.com/api/webhooks/1486618386384556102/c5tVM_ZjyBGvVr2t6HSGRVwe71Bx1_TTICbzZN3Z7h4rfxtBU89xCEZzqCmQqT5NfuxR",
+  "Staff Director": "https://discord.com/api/webhooks/1486618385306484758/fyhkkHEJdkcES1WPqD5TQ0tI1PVGPm7MGMNlJg-xwXKNk1N0OOGwTY98WFf7hHYNRL6F",
+  "ESD": "https://discord.com/api/webhooks/1486618351576027227/1333a4BB4USO4ivks7GOYwzDTtBlPXScohxWtO-FcNPKWXf2tCJue3_YdaSu4z4mWftq",
+  "Support Director": "YOUR_SUPPORT_DIRECTOR_WEBHOOK",
+  "Support": "YOUR_SUPPORT_WEBHOOK"
+};
+document.getElementById('supportTicketForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const discordID = data.get('discord').replace(/[^0-9]/g,'');
+  const department = data.get('department');
+  const issue = data.get('issue');
+  if(!discordID || !department || !issue){ alert("Please fill out all fields."); return; }
+  const payload = { content: `**New Support Ticket: ${department}**\n**Discord:** <@${discordID}>\n**Issue:** ${issue}\n\nStaff: Please respond to this ticket.`};
+  try{
+    await fetch(webhooks[department], { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+    alert("Ticket submitted! Staff will contact you via Discord."); form.reset();
+  } catch(err){ console.error(err); alert("Failed to submit ticket. Check webhook."); }
+});
 
 // ===== Changelog =====
-const changelogWebhook="YOUR_CHANGELOG_WEBHOOK";
-document.getElementById("changelogForm").addEventListener("submit",async e=>{e.preventDefault();const data=new FormData(e.target),version=data.get("version"),details=data.get("details"),payload={content:`**Golden State RP Changelog**\n**Update:** ${version}\n**Details:**\n${details}`};try{await fetch(changelogWebhook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}),alert("Changelog posted!"),e.target.reset()}catch(err){console.error(err),alert("Failed to post changelog. Check webhook.")}});
+const changelogWebhook = "YOUR_CHANGELOG_WEBHOOK";
+document.getElementById('changelogForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const data = new FormData(e.target);
+  const version = data.get('version');
+  const details = data.get('details');
+  const payload = { content: `**Golden State RP Changelog**\n**Update:** ${version}\n**Details:**\n${details}`};
+  try{ await fetch(changelogWebhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); alert("Changelog posted!"); e.target.reset(); }
+  catch(err){ console.error(err); alert("Failed to post changelog. Check webhook."); }
+});
 
-// ===== Departments/Civilian/Teams Forms =====
-function setupApplicationForms(btnClass,containerSelector){
-  document.querySelectorAll(btnClass).forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      const container=document.querySelector(containerSelector);
-      container.innerHTML=`<div class="card"><h4>${Object.values(btn.dataset)[0]} Application</h4><form data-name="${Object.values(btn.dataset)[0]}"><input type="text" name="name" placeholder="In-Game Name" required><input type="text" name="discord" placeholder="Discord ID (numeric)" required><textarea name="motivation" placeholder="Why apply?" required></textarea><button type="submit">Submit Application</button></form></div>`;
-      const form=container.querySelector("form");
-      form.addEventListener("submit",async e=>{
-        e.preventDefault();
-        const data=new FormData(form);
-        const discordID=data.get("discord").replace(/[^0-9]/g,"");
-        const mention=`<@${discordID}>`;
-        const payload={content:`**New Application: ${form.dataset.name}**\n**Name:** ${data.get("name")}\n**Discord:** ${mention}\n**Motivation:** ${data.get("motivation")}`};
-        try{await fetch("YOUR_WEBHOOK_URL",{method:"POST",headers:{"Content-Type":"application/json"},body:
+// ===== Mini Bear Particles =====
+const canvas = document.getElementById('bearCanvas');
+const ctx = canvas.getContext('2d');
+let w=canvas.width=window.innerWidth; let h=canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;});
+const bearImg=new Image(); bearImg.src='https://i.imgur.com/Z5zZqT3.png';
+const particles=[];
+for(let i=0;i<30;i++){particles.push({x:Math.random()*w,y:Math.random()*h,size:Math.random()*20+10,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.2});}
+function animate(){ctx.clearRect(0,0,w,h); particles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.drawImage(bearImg,p.x,p.y,p.size,p.size);});requestAnimationFrame(animate);}
+bearImg.onload=()=>animate();
+</script>
+</body>
+</html>
