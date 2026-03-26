@@ -1,165 +1,39 @@
-<script>
-// ================= WEBHOOKS =================
-const WEBHOOKS = {
-  gangs: "https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h",
-  departments: "https://discord.com/api/webhooks/1479014216605372571/1EESmLywBplTXsMriDl3jJ0kmYFBsARJ5j1j2LUJqHWrFkb0C9aVD2CdOQZpu2skPemH",
-  civ: "PASTE_CIV_WEBHOOK",
-  teams: "PASTE_TEAM_WEBHOOK",
-  support: "PASTE_SUPPORT_WEBHOOK",
-  logs: "PASTE_LOG_WEBHOOK"
-};
+async function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-// ================= TAB SYSTEM =================
-document.querySelectorAll('.nav-link').forEach(btn=>{
-btn.onclick=()=>{
-document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-document.getElementById(btn.dataset.tab)?.classList.add('active');
-}
-});
-
-// ================= FORM SWITCH =================
-function openForm(id){
-document.querySelectorAll('.app-form').forEach(f=>{
-  f.style.display='none';
-});
-document.getElementById(id).style.display='block';
-}
-
-// ================= GENERATE APP ID =================
-function generateID(){
-  return "GSRP-" + Math.floor(100000 + Math.random()*900000);
-}
-
-// ================= SEND EMBED =================
-async function sendEmbed(webhook, embed){
-  await fetch(webhook,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({embeds:[embed]})
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
   });
-}
 
-// ================= MAIN FORM HANDLER =================
-document.querySelectorAll("form").forEach(form=>{
-form.addEventListener("submit", async e=>{
-e.preventDefault();
-
-const appID = generateID();
-const inputs = form.querySelectorAll("input, textarea");
-
-let fields = [];
-let discordID = "";
-
-inputs.forEach(input=>{
-  let label = input.placeholder || "Response";
-  let value = input.value || "N/A";
-
-  if(label.toLowerCase().includes("discord")){
-    discordID = value.replace(/[^0-9]/g,'');
-    value = `<@${discordID}>`;
+  if (res.ok) {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("panel").style.display = "block";
+  } else {
+    alert("Login failed");
   }
+}
 
-  fields.push({
-    name: label,
-    value: value,
-    inline:false
+async function loadRoster() {
+  const res = await fetch("/roster");
+  const data = await res.json();
+
+  document.getElementById("roster").innerHTML =
+    data.map(p => `<div>${p.name} | ${p.callsign} | ${p.dept}</div>`).join("");
+}
+
+async function addMember() {
+  await fetch("/roster/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name.value,
+      callsign: callsign.value,
+      dept: dept.value
+    })
   });
-});
 
-// Detect section
-let category = "support";
-if(form.closest("#gangs")) category = "gangs";
-if(form.closest("#departments")) category = "departments";
-if(form.closest("#civ")) category = "civ";
-if(form.closest("#teams")) category = "teams";
-
-// ================= EMBED =================
-const embed = {
-  title: `?? New ${category.toUpperCase()} Application`,
-  color: 0xFFD700,
-  description: `**Application ID:** ${appID}`,
-  fields: fields,
-  footer: {text:"Golden State RP"},
-  timestamp: new Date()
-};
-
-// ================= ACTION PANEL =================
-const actions = {
-  title:"?? Staff Actions",
-  color: 0x00ff00,
-  description:
-`**Application ID:** ${appID}
-
-?? User: <@${discordID || "Unknown"}>
-
-? Accept:
-\`!accept ${appID} ${discordID}\`
-
-? Deny:
-\`!deny ${appID} ${discordID} [reason]\``
-};
-
-// ================= SEND =================
-await sendEmbed(WEBHOOKS[category], embed);
-await sendEmbed(WEBHOOKS[category], actions);
-
-// Log system
-await sendEmbed(WEBHOOKS.logs,{
-  title:"?? Application Logged",
-  color:0x3498db,
-  description:`Application ${appID} submitted to ${category}`
-});
-
-alert("Application Submitted Successfully!");
-form.reset();
-
-});
-});
-
-// ================= SUPPORT SYSTEM =================
-document.querySelector("#support .btn").onclick = async ()=>{
-const discord = document.querySelector("#support input").value.replace(/[^0-9]/g,'');
-const issue = document.querySelector("#support textarea").value;
-
-const embed = {
-  title:"??? Support Ticket",
-  color:0xffa500,
-  fields:[
-    {name:"User", value:`<@${discord}>`},
-    {name:"Issue", value:issue}
-  ],
-  timestamp:new Date()
-};
-
-await sendEmbed(WEBHOOKS.support, embed);
-
-alert("Ticket Submitted!");
-};
-
-// ================= LOGIN =================
-const accounts = [
-  {u:"esd1",p:"123",r:"ESD"},
-  {u:"civ1",p:"123",r:"CIV"},
-  {u:"staff1",p:"123",r:"STAFF"}
-];
-
-function openLogin(){
-document.getElementById("loginModal").style.display="flex";
+  loadRoster();
 }
-
-function login(){
-let u = document.getElementById("user").value;
-let p = document.getElementById("pass").value;
-
-let found = accounts.find(a=>a.u===u && a.p===p);
-
-if(found){
-alert(`Logged in as ${found.r}`);
-loginModal.style.display="none";
-}else{
-alert("Invalid login");
-}
-}
-</script>

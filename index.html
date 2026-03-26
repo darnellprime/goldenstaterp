@@ -1,260 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>GSRP Admin System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:#fff;
-}
-
-.container{display:flex;height:100vh}
-
-.sidebar{
-width:240px;
-background:#050505;
-padding:15px;
-border-right:1px solid gold;
-}
-
-.logo{
-color:gold;
-font-size:20px;
-margin-bottom:20px;
-}
-
-.nav div{
-padding:10px;
-cursor:pointer;
-color:#aaa;
-}
-
-.nav div:hover{
-color:#fff;
-background:rgba(255,215,0,0.1);
-}
-
-.main{flex:1;padding:20px;overflow:auto}
-
-.card{
-background:#111;
-padding:15px;
-margin-bottom:15px;
-border:1px solid gold;
-}
-
-button{
-background:gold;
-border:none;
-padding:8px;
-cursor:pointer;
-margin-top:5px;
-}
-
-input,select{
-width:100%;
-margin-top:5px;
-padding:8px;
-background:#000;
-color:#fff;
-border:1px solid gold;
-}
-</style>
+  <title>GSRP Panel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-<div class="logo">GSRP ADMIN</div>
-
-<div id="loginSection">
-<input id="username" placeholder="Username">
-<input id="password" placeholder="Password" type="password">
-<button onclick="login()">Login</button>
+<div id="login">
+  <h1>Manager Login</h1>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
 </div>
 
-<div id="nav" class="nav" style="display:none">
-<div onclick="show('dashboard')">Dashboard</div>
-<div onclick="show('roster')">Roster</div>
-<div onclick="show('applications')">Applications</div>
-<div onclick="show('logs')">Logs</div>
+<div id="panel" style="display:none;">
+  <h1>Admin Panel</h1>
+
+  <button onclick="loadRoster()">Load Roster</button>
+
+  <div id="roster"></div>
+
+  <h2>Add Member</h2>
+  <input id="name" placeholder="Name">
+  <input id="callsign" placeholder="Callsign">
+  <input id="dept" placeholder="Department">
+  <button onclick="addMember()">Add</button>
 </div>
 
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-<div id="dashboard" class="page">
-<h2>Dashboard</h2>
-<p id="roleDisplay"></p>
-</div>
-
-<div id="roster" class="page" style="display:none">
-<h2>Roster</h2>
-
-<select id="unitSelect">
-<option value="lspd">LSPD</option>
-<option value="bcso">BCSO</option>
-<option value="sasp">SASP</option>
-<option value="hustlers">400 Hustlers</option>
-</select>
-
-<input id="nameInput" placeholder="Name">
-<input id="callsignInput" placeholder="Callsign">
-
-<button onclick="addMember()">Add Member</button>
-
-<div id="rosterList"></div>
-
-</div>
-
-<div id="applications" class="page" style="display:none">
-<h2>Applications</h2>
-<div id="apps"></div>
-</div>
-
-<div id="logs" class="page" style="display:none">
-<h2>Logs</h2>
-<div id="logList"></div>
-</div>
-
-</div>
-</div>
-
-<script>
-
-/* ===== FAKE USERS ===== */
-let users = JSON.parse(localStorage.getItem("users")) || [
-{u:"california",p:"123",role:"owner"},
-{u:"darnell",p:"123",role:"owner"},
-{u:"drew",p:"123",role:"owner"},
-{u:"flatt",p:"123",role:"director"},
-{u:"ghost",p:"123",role:"director"},
-{u:"anderson",p:"123",role:"director"},
-];
-
-/* ===== GENERATE FTO ACCOUNTS ===== */
-if(!localStorage.getItem("fto")){
-let fto = [];
-["lspd","bcso","sasp","hustlers","diggas","devils"].forEach(unit=>{
-for(let i=1;i<=100;i++){
-fto.push({u:unit+"_fto_"+i,p:"fto123",role:"fto",unit});
-}
-});
-users = users.concat(fto);
-localStorage.setItem("fto", JSON.stringify(fto));
-localStorage.setItem("users", JSON.stringify(users));
-}
-
-/* ===== LOGIN ===== */
-let currentUser = null;
-
-function login(){
-let u = document.getElementById("username").value;
-let p = document.getElementById("password").value;
-
-let found = users.find(x=>x.u===u && x.p===p);
-
-if(found){
-currentUser = found;
-document.getElementById("loginSection").style.display="none";
-document.getElementById("nav").style.display="block";
-document.getElementById("roleDisplay").innerText="Logged in as: "+found.role;
-log("Login: "+u);
-}
-else alert("Invalid login");
-}
-
-/* ===== NAV ===== */
-function show(page){
-document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-document.getElementById(page).style.display="block";
-}
-
-/* ===== ROSTER SYSTEM ===== */
-let roster = JSON.parse(localStorage.getItem("roster")) || [];
-
-function addMember(){
-let unit = document.getElementById("unitSelect").value;
-let name = document.getElementById("nameInput").value;
-let callsign = document.getElementById("callsignInput").value;
-
-let member = {unit,name,callsign,status:"Active"};
-roster.push(member);
-
-localStorage.setItem("roster", JSON.stringify(roster));
-log("Added "+name+" to "+unit);
-renderRoster();
-}
-
-function renderRoster(){
-let div = document.getElementById("rosterList");
-div.innerHTML="";
-
-roster.forEach((m,i)=>{
-div.innerHTML+=`
-<div class="card">
-${m.name} (${m.callsign}) - ${m.unit} - ${m.status}
-
-<button onclick="promote(${i})">Promote</button>
-<button onclick="discharge(${i})">Discharge</button>
-</div>`;
-});
-}
-
-function promote(i){
-if(!canEdit()) return alert("No permission");
-roster[i].status="Promoted";
-saveRoster();
-}
-
-function discharge(i){
-if(!canEdit()) return alert("No permission");
-roster[i].status="Discharged";
-saveRoster();
-}
-
-function saveRoster(){
-localStorage.setItem("roster", JSON.stringify(roster));
-renderRoster();
-}
-
-/* ===== PERMISSIONS ===== */
-function canEdit(){
-return currentUser && (currentUser.role==="owner" || currentUser.role==="director");
-}
-
-/* ===== LOGGING ===== */
-let logs = JSON.parse(localStorage.getItem("logs")) || [];
-
-function log(text){
-logs.push(text);
-localStorage.setItem("logs", JSON.stringify(logs));
-renderLogs();
-}
-
-function renderLogs(){
-let div = document.getElementById("logList");
-div.innerHTML="";
-logs.slice(-50).forEach(l=>{
-div.innerHTML+=`<div class="card">${l}</div>`;
-});
-}
-
-/* ===== INIT ===== */
-renderRoster();
-renderLogs();
-
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
