@@ -2,111 +2,174 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GSRP Panel</title>
+<title>Golden State RP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
-body{background:#0a0f1a;color:#d4af37;}
 
+body{
+background: radial-gradient(circle at top,#050816,#02030a);
+color:#fff;
+overflow:hidden;
+}
+
+/* BACKGROUND */
+.bg{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:
+linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9)),
+url("https://images.unsplash.com/photo-1501594907352-04cda38ebc29");
+background-size:cover;
+background-position:center;
+z-index:-2;
+}
+
+/* GLOW OVERLAY */
+.bg::after{
+content:"";
+position:absolute;
+width:100%;height:100%;
+background: radial-gradient(circle,#ffd70033,transparent);
+}
+
+/* LAYOUT */
 .container{display:flex;height:100vh}
 
 /* SIDEBAR */
 .sidebar{
-width:230px;
-background:#0d1324;
+width:240px;
+background:rgba(10,10,30,0.6);
+backdrop-filter:blur(20px);
+border-right:1px solid rgba(255,255,255,0.05);
 padding:20px;
-border-right:1px solid rgba(212,175,55,0.2);
 }
 
-.logo{color:#fff;font-size:18px;margin-bottom:20px}
+.logo{
+font-size:20px;
+color:#ffd700;
+margin-bottom:30px;
+font-weight:bold;
+text-shadow:0 0 10px gold;
+}
 
 .nav-link{
 padding:12px;
 margin-bottom:10px;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
-color:#aaa;
 transition:.3s;
+color:#aaa;
 }
-.nav-link:hover{background:#1a2238;color:#fff}
-.nav-link.active{background:#d4af37;color:#000}
+
+.nav-link:hover{
+background:rgba(255,215,0,0.15);
+color:#fff;
+box-shadow:0 0 15px rgba(255,215,0,0.4);
+}
+
+.nav-link.active{
+background:linear-gradient(90deg,#ffd700,#b89600);
+color:#000;
+}
 
 /* MAIN */
-.main{flex:1;padding:25px;overflow-y:auto}
+.main{
+flex:1;
+padding:25px;
+overflow-y:auto;
+}
 
 /* CARDS */
 .card{
-background:#111827;
+background:rgba(20,25,50,0.5);
+backdrop-filter:blur(15px);
+border:1px solid rgba(255,255,255,0.05);
+border-radius:15px;
 padding:20px;
-border-radius:12px;
 margin-bottom:20px;
-border:1px solid rgba(212,175,55,0.2);
+transition:.3s;
 }
 
-/* INPUTS */
-input,textarea,select{
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 0 25px rgba(255,215,0,0.2);
+}
+
+/* BUTTONS */
+.btn{
+padding:10px 15px;
+border-radius:10px;
+border:none;
+cursor:pointer;
+font-weight:bold;
+background:linear-gradient(90deg,#ffd700,#b89600);
+color:#000;
+transition:.3s;
+}
+
+.btn:hover{
+box-shadow:0 0 20px gold;
+transform:scale(1.05);
+}
+
+/* GRID */
+.grid{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+margin-top:15px;
+}
+
+.grid div{
+padding:10px 15px;
+border-radius:10px;
+background:#0b1220;
+cursor:pointer;
+transition:.3s;
+}
+
+.grid div:hover{
+transform:scale(1.08);
+box-shadow:0 0 15px gold;
+}
+
+/* FORMS */
+input,textarea{
 width:100%;
 margin-top:10px;
 padding:10px;
+border-radius:8px;
+border:1px solid rgba(255,255,255,0.1);
 background:#0b1220;
-border:1px solid #333;
 color:#fff;
-border-radius:6px;
 }
 
-button{
-margin-top:10px;
-padding:10px;
-background:#d4af37;
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-}
-button:hover{background:#ffd700}
+textarea{min-height:80px}
 
 /* TABS */
 .tab{display:none}
 .tab.active{display:block}
 
-/* LOGIN MODAL */
-#loginModal{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.9);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:1000;
-}
+.form{display:none}
 </style>
 </head>
 
 <body>
 
-<div id="loginModal">
-  <div class="card" style="width:300px">
-    <h2>Staff Login</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-  </div>
-</div>
+<div class="bg"></div>
 
 <div class="container">
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-<div class="logo">GSRP Panel</div>
+<div class="logo">GSRP</div>
 
-<div class="nav-link active" data-tab="home">Home</div>
-<div class="nav-link" data-tab="gangs">Gangs</div>
-<div class="nav-link" data-tab="departments">Departments</div>
-<div class="nav-link" data-tab="teams">Teams</div>
-<div class="nav-link" data-tab="support">Support</div>
-<div class="nav-link" onclick="openLogin()">🔐 Login</div>
+<div class="nav-link active" data-tab="home">🏠 Home</div>
+<div class="nav-link" data-tab="gangs">🔫 Gangs</div>
+<div class="nav-link" data-tab="departments">🚓 Departments</div>
 
 </div>
 
@@ -116,95 +179,91 @@ z-index:1000;
 <!-- HOME -->
 <div id="home" class="tab active">
 <div class="card">
-<h2>Welcome to Golden State RP</h2>
-<p>Control Panel & Applications</p>
+<h2>Golden State Roleplay</h2>
+<p>Next Generation Roleplay Experience</p>
 </div>
 
 <div class="card">
-<h3>Quick Access</h3>
-<a href="https://discord.gg/6PzCRaXv" target="_blank">
-<button>Join Discord</button>
-</a>
-
-<button onclick="alert('Add your server connect link')">Join Server</button>
-<button onclick="alert('Add socials links')">Socials</button>
+<button class="btn">Join Server</button>
+<button class="btn">Discord</button>
 </div>
 </div>
 
-<!-- GANG APPLICATION -->
+<!-- GANGS -->
 <div id="gangs" class="tab">
 <div class="card">
-<h2>Gang Application</h2>
+<h2>Select a Gang</h2>
+<div class="grid">
+<div onclick="openForm('hustlers')">400 Hustlers</div>
+<div onclick="openForm('diggas')">Grave Diggas</div>
+<div onclick="openForm('devils')">Los Blue Devils</div>
+</div>
+</div>
 
-<form id="gangForm">
-<input placeholder="In-Game Name" required>
-<input placeholder="Discord ID" required>
+<div id="hustlers" class="card form">
+<h3>400 Hustlers Application</h3>
+<input placeholder="Name">
+<input placeholder="Discord ID">
+<textarea placeholder="Why do you want to join Hustlers?"></textarea>
+<textarea placeholder="Describe a loyalty scenario"></textarea>
+<button class="btn">Submit</button>
+</div>
 
-<textarea placeholder="Why do you want to join this gang?" required></textarea>
+<div id="diggas" class="card form">
+<h3>Grave Diggas Application</h3>
+<input placeholder="Name">
+<input placeholder="Discord ID">
+<textarea placeholder="Describe a heist plan"></textarea>
+<textarea placeholder="Escape from police scenario"></textarea>
+<button class="btn">Submit</button>
+</div>
 
-<textarea placeholder="Describe a loyalty RP scenario (detailed)" required></textarea>
-
-<textarea placeholder="How would you handle conflict with another gang?" required></textarea>
-
-<textarea placeholder="What can you bring to the gang?" required></textarea>
-
-<button>Submit Application</button>
-</form>
+<div id="devils" class="card form">
+<h3>Los Blue Devils Application</h3>
+<input placeholder="Name">
+<input placeholder="Discord ID">
+<textarea placeholder="Territory control scenario"></textarea>
+<textarea placeholder="Gang war response"></textarea>
+<button class="btn">Submit</button>
 </div>
 </div>
 
 <!-- DEPARTMENTS -->
 <div id="departments" class="tab">
 <div class="card">
-<h2>Department Application</h2>
-
-<form>
-<input placeholder="Full Name" required>
-<input placeholder="Discord ID" required>
-
-<textarea placeholder="Why do you want to join Law Enforcement?" required></textarea>
-
-<textarea placeholder="Explain a traffic stop scenario in detail" required></textarea>
-
-<textarea placeholder="How would you handle a fleeing suspect?" required></textarea>
-
-<textarea placeholder="What does good RP mean to you?" required></textarea>
-
-<button>Submit Application</button>
-</form>
+<h2>Select Department</h2>
+<div class="grid">
+<div onclick="openForm('sasp')">SASP</div>
+<div onclick="openForm('bcso')">BCSO</div>
+<div onclick="openForm('lspd')">LSPD</div>
 </div>
 </div>
 
-<!-- TEAMS -->
-<div id="teams" class="tab">
-<div class="card">
-<h2>Team Application</h2>
-
-<form>
-<input placeholder="Name" required>
-<input placeholder="Discord ID" required>
-
-<textarea placeholder="Why do you want this position?" required></textarea>
-
-<textarea placeholder="Describe a time you handled responsibility" required></textarea>
-
-<textarea placeholder="How active are you?" required></textarea>
-
-<button>Submit</button>
-</form>
-</div>
+<div id="sasp" class="card form">
+<h3>SASP Application</h3>
+<input placeholder="Name">
+<input placeholder="Discord ID">
+<textarea placeholder="Felony traffic stop scenario"></textarea>
+<textarea placeholder="High-speed pursuit response"></textarea>
+<button class="btn">Submit</button>
 </div>
 
-<!-- SUPPORT -->
-<div id="support" class="tab">
-<div class="card">
-<h2>Support Ticket</h2>
+<div id="bcso" class="card form">
+<h3>BCSO Application</h3>
+<input placeholder="Name">
+<input placeholder="Discord ID">
+<textarea placeholder="Rural patrol situation"></textarea>
+<textarea placeholder="Backup request handling"></textarea>
+<button class="btn">Submit</button>
+</div>
 
-<form>
-<input placeholder="Discord ID" required>
-<textarea placeholder="Explain your issue" required></textarea>
-<button>Submit Ticket</button>
-</form>
+<div id="lspd" class="card form">
+<h3>LSPD Application</h3>
+<input placeholder="Name">
+<input placeholder="Discord ID">
+<textarea placeholder="Urban crime response"></textarea>
+<textarea placeholder="Crowd control scenario"></textarea>
+<button class="btn">Submit</button>
 </div>
 </div>
 
@@ -217,41 +276,15 @@ document.querySelectorAll('.nav-link').forEach(btn=>{
 btn.onclick=()=>{
 document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
 btn.classList.add('active');
-
 document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-document.getElementById(btn.dataset.tab)?.classList.add('active');
-};
+document.getElementById(btn.dataset.tab).classList.add('active');
+}
 });
 
-// LOGIN SYSTEM
-const accounts=[
-{u:"esd1",p:"123",r:"ESD"},
-{u:"esd2",p:"123",r:"ESD"},
-{u:"esd3",p:"123",r:"ESD"},
-
-{u:"civ1",p:"123",r:"CIV"},
-{u:"civ2",p:"123",r:"CIV"},
-
-{u:"staff1",p:"123",r:"STAFF"},
-{u:"staff2",p:"123",r:"STAFF"}
-];
-
-function openLogin(){
-document.getElementById("loginModal").style.display="flex";
-}
-
-function login(){
-let u=document.getElementById("user").value;
-let p=document.getElementById("pass").value;
-
-let acc=accounts.find(a=>a.u===u && a.p===p);
-
-if(acc){
-alert("Logged in as "+acc.r);
-document.getElementById("loginModal").style.display="none";
-}else{
-alert("Invalid");
-}
+// FORMS
+function openForm(id){
+document.querySelectorAll('.form').forEach(f=>f.style.display='none');
+document.getElementById(id).style.display='block';
 }
 </script>
 
