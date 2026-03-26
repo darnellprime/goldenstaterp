@@ -70,6 +70,13 @@ app.post("/login", (req, res) => {
   });
 });
 
+// ===== LOGOUT (NEW) =====
+app.post("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+});
+
 // ===== CHECK SESSION =====
 app.get("/me", (req, res) => {
   if (!req.session.user) {

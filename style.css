@@ -1,25 +1,22 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #050505;
+  font-family: Arial;
+  background: black;
   color: white;
   overflow: hidden;
 }
 
-/* GOLD GLOW ACCENTS */
 h1, h2 {
   color: gold;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  text-shadow: 0 0 10px gold;
 }
 
-/* MAIN CONTAINER */
 .container {
   padding: 20px;
   position: relative;
   z-index: 2;
 }
 
-/* TAB BUTTONS */
 .tabs button {
   margin: 5px;
   padding: 10px 15px;
@@ -27,17 +24,14 @@ h1, h2 {
   border: 1px solid gold;
   color: gold;
   cursor: pointer;
-  transition: 0.3s;
   border-radius: 6px;
 }
 
 .tabs button:hover {
   background: gold;
   color: black;
-  box-shadow: 0 0 10px gold;
 }
 
-/* TAB CONTENT */
 .tab {
   margin-top: 20px;
 }
@@ -49,73 +43,44 @@ h1, h2 {
 /* MODAL */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 5;
 }
 
 .modal-box {
-  background: #0a0a0a;
+  background: #111;
   padding: 25px;
-  border-radius: 12px;
-  width: 320px;
+  border-radius: 10px;
+  width: 300px;
   text-align: center;
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
-  animation: floatIn 0.5s ease;
 }
 
-/* INPUTS */
 input {
   width: 100%;
-  margin: 10px 0;
   padding: 10px;
+  margin: 10px 0;
   background: black;
   border: 1px solid gold;
   color: gold;
-  border-radius: 6px;
 }
 
-/* BUTTONS */
 button {
   padding: 10px;
-  margin-top: 10px;
   background: gold;
   border: none;
-  cursor: pointer;
   width: 100%;
-  border-radius: 6px;
-  transition: 0.3s;
+  margin-top: 10px;
 }
 
-button:hover {
-  box-shadow: 0 0 15px gold;
-}
-
-/* ERROR */
 .error {
   color: red;
-  font-size: 14px;
 }
 
-/* ANIMATION */
-@keyframes floatIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* PARTICLES CANVAS */
+/* PARTICLES */
 #particles {
   position: fixed;
   top: 0;
