@@ -6,8 +6,9 @@
 <title>Golden State RP</title>
 <style>
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif;}
-body {background:#0a0a0a; color:#f5c518;}
-header{background:linear-gradient(90deg,#000,#1c1c1c);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #f5c518;}
+body {background:#0a0a0a; color:#f5c518; overflow-x:hidden;}
+canvas {position:fixed; top:0; left:0; z-index:-1;}
+header{background:linear-gradient(90deg,#000,#1c1c1c);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #f5c518;position:relative;z-index:2;}
 header h1{color:#f5c518;font-size:2rem;letter-spacing:2px;}
 nav ul{display:flex;gap:1.5rem;}
 nav li{cursor:pointer;padding:.5rem 1rem;border-radius:5px;transition:.3s;}
@@ -22,9 +23,28 @@ form{display:flex;flex-direction:column;gap:.8rem;}
 input,textarea,select{padding:.7rem;border-radius:5px;border:1px solid #f5c518;background:#0a0a0a;color:#f5c518;resize:none;}
 input:focus,textarea:focus,select:focus{outline:none;border-color:#d4a100;}
 footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size:.9rem;margin-top:2rem;}
+
+/* Sign-in Modal */
+#signinModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:flex;justify-content:center;align-items:center;z-index:10;}
+#signinModal .modal-content{background:#1a1a1a;padding:2rem;border-radius:12px;width:300px;display:flex;flex-direction:column;gap:1rem;text-align:center;}
+#signinModal input{width:100%;}
+#signinModal button{margin-top:1rem;}
 </style>
 </head>
 <body>
+
+<!-- Bear Particle Canvas -->
+<canvas id="bearCanvas"></canvas>
+
+<!-- Sign-In Modal -->
+<div id="signinModal">
+  <div class="modal-content">
+    <h2>Staff Sign-In</h2>
+    <input type="text" id="staffUser" placeholder="Username">
+    <input type="password" id="staffPass" placeholder="Password">
+    <button id="signinBtn">Sign In</button>
+  </div>
+</div>
 
 <header>
   <h1>Golden State RP</h1>
@@ -34,11 +54,12 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <li class="tab-link" data-tab="civ">Civilian Ops</li>
       <li class="tab-link" data-tab="support">Support Tickets</li>
       <li class="tab-link" data-tab="discord">Discord</li>
+      <li class="tab-link" data-tab="changelog">Changelog</li>
     </ul>
   </nav>
 </header>
 
-<main>
+<main style="display:none;">
 
 <!-- Gangs Tab -->
 <section id="gangs" class="tab-content active">
@@ -50,8 +71,7 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <button class="gang-btn" data-gang="graveDiggas">Grave Diggas</button>
     </div>
   </div>
-
-  <!-- 400 Hustlers Form -->
+  <!-- Forms here (same as your previous code) -->
   <div class="gang-form" id="hustlers" style="display:none;">
     <div class="card">
       <h3>400 Hustlers Application</h3>
@@ -65,8 +85,6 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       </form>
     </div>
   </div>
-
-  <!-- Los Blue Devil's Form -->
   <div class="gang-form" id="blueDevils" style="display:none;">
     <div class="card">
       <h3>Los Blue Devil's Application</h3>
@@ -80,8 +98,6 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       </form>
     </div>
   </div>
-
-  <!-- Grave Diggas Form -->
   <div class="gang-form" id="graveDiggas" style="display:none;">
     <div class="card">
       <h3>Grave Diggas Application</h3>
@@ -132,11 +148,37 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
   </div>
 </section>
 
+<!-- Changelog Tab -->
+<section id="changelog" class="tab-content">
+  <div class="card">
+    <h3>Post a Server Changelog</h3>
+    <form id="changelogForm">
+      <input type="text" name="version" placeholder="Version / Update Title" required>
+      <textarea name="details" placeholder="Describe the update" required></textarea>
+      <button type="submit">Submit Changelog</button>
+    </form>
+  </div>
+</section>
+
 </main>
 <footer>&copy; 2026 Golden State Roleplay | All Rights Reserved</footer>
 
 <script>
-// Tab navigation
+// ===== Staff Sign-In =====
+const STAFF_USER = "admin";
+const STAFF_PASS = "password123";
+const signinModal = document.getElementById('signinModal');
+const mainContent = document.querySelector('main');
+document.getElementById('signinBtn').addEventListener('click', () => {
+  const user = document.getElementById('staffUser').value;
+  const pass = document.getElementById('staffPass').value;
+  if(user === STAFF_USER && pass === STAFF_PASS){
+    signinModal.style.display = 'none';
+    mainContent.style.display = 'block';
+  } else { alert('Invalid credentials'); }
+});
+
+// ===== Tabs =====
 const tabs = document.querySelectorAll('.tab-link');
 const contents = document.querySelectorAll('.tab-content');
 tabs.forEach(tab => {
@@ -148,7 +190,7 @@ tabs.forEach(tab => {
   });
 });
 
-// Gang selection
+// ===== Gang Selection =====
 const gangButtons = document.querySelectorAll('.gang-btn');
 const gangForms = document.querySelectorAll('.gang-form');
 gangButtons.forEach(btn => {
@@ -158,7 +200,7 @@ gangButtons.forEach(btn => {
   });
 });
 
-// Gang Applications Webhook
+// ===== Gang Applications Webhook =====
 const gangFormsForms = document.querySelectorAll('.gang-form form');
 gangFormsForms.forEach(form => {
   form.addEventListener('submit', async e => {
@@ -177,21 +219,14 @@ gangFormsForms.forEach(form => {
                `**Scenario:** ${data.get('scenario')}`
     };
     try {
-      await fetch('https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-      });
+      await fetch('https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
       alert('Application submitted! Staff will review and respond.');
       form.reset();
-    } catch(err){
-      alert('Failed to submit. Check webhook URL.');
-      console.error(err);
-    }
+    } catch(err){ alert('Failed to submit. Check webhook URL.'); console.error(err); }
   });
 });
 
-// Support Ticket System
+// ===== Support Tickets =====
 const webhooks = {
   "Internal Operations": "https://discord.com/api/webhooks/1486618386384556102/c5tVM_ZjyBGvVr2t6HSGRVwe71Bx1_TTICbzZN3Z7h4rfxtBU89xCEZzqCmQqT5NfuxR",
   "Staff Director": "https://discord.com/api/webhooks/1486618385306484758/fyhkkHEJdkcES1WPqD5TQ0tI1PVGPm7MGMNlJg-xwXKNk1N0OOGwTY98WFf7hHYNRL6F",
@@ -199,7 +234,6 @@ const webhooks = {
   "Support Director": "YOUR_SUPPORT_DIRECTOR_WEBHOOK",
   "Support": "YOUR_SUPPORT_WEBHOOK"
 };
-
 document.getElementById('supportTicketForm').addEventListener('submit', async e => {
   e.preventDefault();
   const form = e.target;
@@ -207,32 +241,36 @@ document.getElementById('supportTicketForm').addEventListener('submit', async e 
   const discordID = data.get('discord').replace(/[^0-9]/g,'');
   const department = data.get('department');
   const issue = data.get('issue');
-
-  if(!discordID || !department || !issue){
-    alert("Please fill out all fields.");
-    return;
-  }
-
-  const payload = {
-    content: `**New Support Ticket: ${department}**\n` +
-             `**Discord:** <@${discordID}>\n` +
-             `**Issue:** ${issue}\n\n` +
-             `Staff: Please respond to this ticket.`
-  };
-
+  if(!discordID || !department || !issue){ alert("Please fill out all fields."); return; }
+  const payload = { content: `**New Support Ticket: ${department}**\n**Discord:** <@${discordID}>\n**Issue:** ${issue}\n\nStaff: Please respond to this ticket.`};
   try{
-    await fetch(webhooks[department], {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    alert("Ticket submitted! Staff will contact you via Discord.");
-    form.reset();
-  } catch(err){
-    console.error(err);
-    alert("Failed to submit ticket. Check webhook.");
-  }
+    await fetch(webhooks[department], { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+    alert("Ticket submitted! Staff will contact you via Discord."); form.reset();
+  } catch(err){ console.error(err); alert("Failed to submit ticket. Check webhook."); }
 });
+
+// ===== Changelog =====
+const changelogWebhook = "YOUR_CHANGELOG_WEBHOOK";
+document.getElementById('changelogForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const data = new FormData(e.target);
+  const version = data.get('version');
+  const details = data.get('details');
+  const payload = { content: `**Golden State RP Changelog**\n**Update:** ${version}\n**Details:**\n${details}`};
+  try{ await fetch(changelogWebhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); alert("Changelog posted!"); e.target.reset(); }
+  catch(err){ console.error(err); alert("Failed to post changelog. Check webhook."); }
+});
+
+// ===== Mini Bear Particles =====
+const canvas = document.getElementById('bearCanvas');
+const ctx = canvas.getContext('2d');
+let w=canvas.width=window.innerWidth; let h=canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;});
+const bearImg=new Image(); bearImg.src='https://i.imgur.com/Z5zZqT3.png';
+const particles=[];
+for(let i=0;i<30;i++){particles.push({x:Math.random()*w,y:Math.random()*h,size:Math.random()*20+10,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.2});}
+function animate(){ctx.clearRect(0,0,w,h); particles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.drawImage(bearImg,p.x,p.y,p.size,p.size);});requestAnimationFrame(animate);}
+bearImg.onload=()=>animate();
 </script>
 </body>
 </html>
