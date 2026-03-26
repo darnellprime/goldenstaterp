@@ -1,23 +1,43 @@
 body {
   margin: 0;
-  font-family: Arial;
-  background: black;
-  color: gold;
+  font-family: Arial, sans-serif;
+  background: #050505;
+  color: white;
+  overflow: hidden;
 }
 
+/* GOLD GLOW ACCENTS */
+h1, h2 {
+  color: gold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* MAIN CONTAINER */
 .container {
   padding: 20px;
+  position: relative;
+  z-index: 2;
 }
 
-/* TABS */
+/* TAB BUTTONS */
 .tabs button {
   margin: 5px;
-  padding: 10px;
-  background: gold;
-  border: none;
+  padding: 10px 15px;
+  background: transparent;
+  border: 1px solid gold;
+  color: gold;
   cursor: pointer;
+  transition: 0.3s;
+  border-radius: 6px;
 }
 
+.tabs button:hover {
+  background: gold;
+  color: black;
+  box-shadow: 0 0 10px gold;
+}
+
+/* TAB CONTENT */
 .tab {
   margin-top: 20px;
 }
@@ -37,25 +57,31 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 5;
 }
 
 .modal-box {
-  background: #111;
-  padding: 20px;
-  border-radius: 10px;
-  width: 300px;
+  background: #0a0a0a;
+  padding: 25px;
+  border-radius: 12px;
+  width: 320px;
   text-align: center;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
+  animation: floatIn 0.5s ease;
 }
 
+/* INPUTS */
 input {
   width: 100%;
   margin: 10px 0;
   padding: 10px;
-  background: #000;
+  background: black;
   border: 1px solid gold;
   color: gold;
+  border-radius: 6px;
 }
 
+/* BUTTONS */
 button {
   padding: 10px;
   margin-top: 10px;
@@ -63,13 +89,36 @@ button {
   border: none;
   cursor: pointer;
   width: 100%;
+  border-radius: 6px;
+  transition: 0.3s;
 }
 
+button:hover {
+  box-shadow: 0 0 15px gold;
+}
+
+/* ERROR */
 .error {
   color: red;
+  font-size: 14px;
 }
 
-.small {
-  font-size: 12px;
-  opacity: 0.7;
+/* ANIMATION */
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PARTICLES CANVAS */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
