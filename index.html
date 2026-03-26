@@ -1,63 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>GSRP Control Panel</title>
+  <meta charset="UTF-8">
+  <title>Control Panel</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login">
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="screen">
   <div class="login-box">
-    <h1>Manager Access</h1>
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">ENTER</button>
+    <h1>Manager Login</h1>
+
+    <input type="text" id="username" placeholder="Username" autocomplete="off">
+    <input type="password" id="password" placeholder="Password" autocomplete="off">
+
+    <button onclick="login()">Login</button>
+
+    <p id="error" class="error"></p>
+
+    <div class="test-accounts">
+      <p><b>Test Accounts</b></p>
+      <p>Owner: <code>owner / owner123</code></p>
+      <p>Admin: <code>admin / admin123</code></p>
+      <p>FTO: <code>fto / fto123</code></p>
+    </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="app" class="hidden">
+<!-- MAIN DASHBOARD -->
+<div id="dashboard" class="screen hidden">
+  <h1>Control Panel</h1>
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h2>GSRP</h2>
-
-    <button onclick="showTab('dashboard')">Dashboard</button>
-    <button onclick="showTab('roster')">Roster</button>
-    <button onclick="showTab('apps')">Applications</button>
+  <div class="tabs">
+    <button onclick="openTab('roster')">Roster</button>
+    <button onclick="openTab('applications')">Applications</button>
+    <button onclick="openTab('logs')">Logs</button>
   </div>
 
-  <!-- CONTENT -->
-  <div class="content">
-
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="tab active">
-      <h1>Dashboard</h1>
-      <p>Welcome to the Control Panel</p>
-    </div>
-
-    <!-- ROSTER -->
-    <div id="roster" class="tab">
-      <h1>Roster</h1>
-
-      <div class="card">
-        <input id="name" placeholder="Name">
-        <input id="callsign" placeholder="Callsign">
-        <input id="dept" placeholder="Department">
-        <button onclick="addMember()">Add</button>
-      </div>
-
-      <div id="rosterList"></div>
-    </div>
-
-    <!-- APPLICATIONS -->
-    <div id="apps" class="tab">
-      <h1>Applications</h1>
-      <div id="appList"></div>
-    </div>
-
+  <div id="roster" class="tab">
+    <h2>Roster</h2>
+    <p>Calls, Promote, Discharge coming soon...</p>
   </div>
+
+  <div id="applications" class="tab hidden">
+    <h2>Applications</h2>
+    <p>Application system coming soon...</p>
+  </div>
+
+  <div id="logs" class="tab hidden">
+    <h2>Logs</h2>
+    <p>Webhook logs coming soon...</p>
+  </div>
+
+  <button onclick="logout()">Logout</button>
 </div>
 
 <script src="script.js"></script>

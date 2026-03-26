@@ -1,65 +1,58 @@
-async function login() {
-  const res = await fetch("/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: username.value,
-      password: password.value
-    })
-  });
+// TEST ACCOUNTS
+const users = [
+  { username: "owner", password: "owner123", role: "Owner" },
+  { username: "admin", password: "admin123", role: "Admin" },
+  { username: "fto", password: "fto123", role: "FTO" }
+];
 
-  if (res.ok) {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").classList.remove("hidden");
+// LOGIN FUNCTION
+function login() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const error = document.getElementById("error");
+
+  const user = users.find(u => u.username === username && u.password === password);
+
+  if (user) {
+    localStorage.setItem("user", JSON.stringify(user));
+
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+
+    openTab("roster");
   } else {
-    alert("Login failed");
+    error.textContent = "Invalid login";
   }
 }
 
-/* TAB SYSTEM */
-function showTab(tabId) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");
+// ENTER KEY SUPPORT
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    login();
+  }
+});
 
-  if (tabId === "roster") loadRoster();
-  if (tabId === "apps") loadApps();
+// LOGOUT
+function logout() {
+  localStorage.removeItem("user");
+  location.reload();
 }
 
-/* ROSTER */
-async function loadRoster() {
-  const res = await fetch("/roster");
-  const data = await res.json();
-
-  rosterList.innerHTML = data.map(p => `
-    <div class="card">
-      ${p.name} | ${p.callsign} | ${p.dept}
-    </div>
-  `).join("");
-}
-
-/* ADD MEMBER */
-async function addMember() {
-  await fetch("/roster/add", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: name.value,
-      callsign: callsign.value,
-      dept: dept.value
-    })
+// TAB SWITCHING
+function openTab(tabName) {
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.add("hidden");
   });
 
-  loadRoster();
+  document.getElementById(tabName).classList.remove("hidden");
 }
 
-/* APPLICATIONS */
-async function loadApps() {
-  const res = await fetch("/applications");
-  const data = await res.json();
+// AUTO LOGIN IF ALREADY LOGGED IN
+window.onload = function() {
+  const user = localStorage.getItem("user");
 
-  appList.innerHTML = data.map(a => `
-    <div class="card">
-      ${a.name} | ${a.dept} | ${a.status}
-    </div>
-  `).join("");
-}
+  if (user) {
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+  }
+};
