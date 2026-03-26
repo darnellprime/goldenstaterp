@@ -1,17 +1,25 @@
-body {
-  background: #000;
-  color: gold;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: Arial;
 }
 
+body {
+  background: #050505;
+  color: gold;
+  overflow: hidden;
+}
+
+/* animated background */
 body::before {
   content: "";
   position: fixed;
   width: 200%;
   height: 200%;
   background: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
-  opacity: 0.12;
-  animation: move 80s linear infinite;
+  opacity: 0.1;
+  animation: move 120s linear infinite;
 }
 
 @keyframes move {
@@ -19,15 +27,121 @@ body::before {
   to { transform: translate(-50%, -50%); }
 }
 
-button {
+/* LOGIN */
+#login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  background: #0a0a0a;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px gold;
+  text-align: center;
+  animation: fadeIn 1s ease;
+}
+
+.login-box input {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 200px;
+  background: #111;
+  border: 1px solid gold;
+  color: gold;
+}
+
+.login-box button {
+  padding: 10px 20px;
   background: gold;
   border: none;
-  padding: 10px;
-  margin: 5px;
   cursor: pointer;
 }
 
-input {
+/* APP LAYOUT */
+.hidden {
+  display: none;
+}
+
+#app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #080808;
+  border-right: 1px solid gold;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid gold;
+  color: gold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar button:hover {
+  background: gold;
+  color: black;
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* TABS */
+.tab {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.tab.active {
+  display: block;
+}
+
+/* CARDS */
+.card {
+  background: #0b0b0b;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid gold;
+}
+
+.card input {
   margin: 5px;
   padding: 8px;
+  background: #111;
+  border: 1px solid gold;
+  color: gold;
+}
+
+.card button {
+  padding: 8px 15px;
+  background: gold;
+  border: none;
+  cursor: pointer;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

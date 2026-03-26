@@ -1,25 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GSRP Panel</title>
+  <title>GSRP Control Panel</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login">
-  <h1>Manager Login</h1>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
+  <div class="login-box">
+    <h1>Manager Access</h1>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">ENTER</button>
+  </div>
 </div>
 
-<div id="panel" style="display:none;">
-  <h1>Admin Panel</h1>
+<!-- MAIN APP -->
+<div id="app" class="hidden">
 
-  <button onclick="loadRoster()">Roster</button>
-  <button onclick="loadApps()">Applications</button>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>GSRP</h2>
 
-  <div id="content"></div>
+    <button onclick="showTab('dashboard')">Dashboard</button>
+    <button onclick="showTab('roster')">Roster</button>
+    <button onclick="showTab('apps')">Applications</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="tab active">
+      <h1>Dashboard</h1>
+      <p>Welcome to the Control Panel</p>
+    </div>
+
+    <!-- ROSTER -->
+    <div id="roster" class="tab">
+      <h1>Roster</h1>
+
+      <div class="card">
+        <input id="name" placeholder="Name">
+        <input id="callsign" placeholder="Callsign">
+        <input id="dept" placeholder="Department">
+        <button onclick="addMember()">Add</button>
+      </div>
+
+      <div id="rosterList"></div>
+    </div>
+
+    <!-- APPLICATIONS -->
+    <div id="apps" class="tab">
+      <h1>Applications</h1>
+      <div id="appList"></div>
+    </div>
+
+  </div>
 </div>
 
 <script src="script.js"></script>
