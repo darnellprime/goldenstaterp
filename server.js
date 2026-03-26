@@ -1,23 +1,33 @@
 const express = require("express");
 const session = require("express-session");
 const sqlite3 = require("sqlite3").verbose();
+const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
 
-// ===== DATABASE =====
+// ===== DB =====
 const db = new sqlite3.Database("./database.db");
 
 // ===== MIDDLEWARE =====
 app.use(express.json());
 app.use(express.static("public"));
+
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
 app.use(session({
   secret: "gsrp_secret",
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true
+  }
 }));
 
-// ===== ROLES =====
+// ===== USERS =====
 const users = [
   { username: "owner1", password: "pass123", role: "owner" },
   { username: "manager1", password: "pass123", role: "manager" },
@@ -25,7 +35,7 @@ const users = [
   { username: "staff1", password: "pass123", role: "staff" },
 ];
 
-// ===== GENERATE 100 FTO ACCOUNTS =====
+// ===== 100 FTO ACCOUNTS =====
 for (let i = 1; i <= 100; i++) {
   users.push({
     username: `fto${i}`,
@@ -38,28 +48,56 @@ for (let i = 1; i <= 100; i++) {
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
-  const user = users.find(u => u.username === username && u.password === password);
+  const user = users.find(
+    u => u.username === username && u.password === password
+  );
 
-  if (!user) return res.status(401).send("Invalid login");
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid login"
+    });
+  }
 
   req.session.user = user;
-  res.send(user);
+
+  res.json({
+    success: true,
+    user: {
+      username: user.username,
+      role: user.role
+    }
+  });
 });
 
-// ===== AUTH CHECK =====
+// ===== CHECK SESSION =====
+app.get("/me", (req, res) => {
+  if (!req.session.user) {
+    return res.json({ loggedIn: false });
+  }
+
+  res.json({
+    loggedIn: true,
+    user: req.session.user
+  });
+});
+
+// ===== AUTH MIDDLEWARE =====
 function requireRole(role) {
   return (req, res, next) => {
     if (!req.session.user) return res.status(401).send("Not logged in");
 
     const roles = ["fto", "staff", "director", "manager", "owner"];
+
     if (roles.indexOf(req.session.user.role) < roles.indexOf(role)) {
       return res.status(403).send("No permission");
     }
+
     next();
   };
 }
 
-// ===== DATABASE TABLES =====
+// ===== TABLES =====
 db.run(`
 CREATE TABLE IF NOT EXISTS roster (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -78,7 +116,7 @@ CREATE TABLE IF NOT EXISTS applications (
 )
 `);
 
-// ===== LOG FUNCTION (DISCORD WEBHOOKS) =====
+// ===== DISCORD WEBHOOKS =====
 const webhooks = {
   lspd: "YOUR_LSPD_WEBHOOK",
   bcso: "YOUR_BCSO_WEBHOOK",
@@ -117,7 +155,6 @@ app.post("/roster/add", requireRole("staff"), (req, res) => {
   res.send("Added");
 });
 
-// ===== PROMOTE / DISCHARGE =====
 app.post("/roster/delete", requireRole("manager"), (req, res) => {
   const { id, dept } = req.body;
 
@@ -138,7 +175,10 @@ app.get("/applications", (req, res) => {
 app.post("/applications/add", (req, res) => {
   const { name, dept } = req.body;
 
-  db.run("INSERT INTO applications (name, dept) VALUES (?, ?)", [name, dept]);
+  db.run(
+    "INSERT INTO applications (name, dept) VALUES (?, ?)",
+    [name, dept]
+  );
 
   sendLog(dept, `New Application: ${name}`);
 
@@ -153,7 +193,7 @@ app.post("/applications/update", requireRole("manager"), (req, res) => {
   res.send("Updated");
 });
 
-// ===== START SERVER =====
+// ===== START =====
 app.listen(PORT, () => {
-  console.log(`Running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
