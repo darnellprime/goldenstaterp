@@ -19,8 +19,8 @@ nav li:hover,nav li.active{background:#f5c518;color:#0a0a0a;}
 button,.discord-btn{cursor:pointer;border:none;padding:.7rem 1.5rem;border-radius:8px;font-weight:bold;transition:.3s;background:#f5c518;color:#0a0a0a;}
 button:hover,.discord-btn:hover{background:#d4a100;}
 form{display:flex;flex-direction:column;gap:.8rem;}
-input,textarea{padding:.7rem;border-radius:5px;border:1px solid #f5c518;background:#0a0a0a;color:#f5c518;resize:none;}
-input:focus,textarea:focus{outline:none;border-color:#d4a100;}
+input,textarea,select{padding:.7rem;border-radius:5px;border:1px solid #f5c518;background:#0a0a0a;color:#f5c518;resize:none;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#d4a100;}
 footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size:.9rem;margin-top:2rem;}
 </style>
 </head>
@@ -39,6 +39,8 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
 </header>
 
 <main>
+
+<!-- Gangs Tab -->
 <section id="gangs" class="tab-content active">
   <div class="card">
     <h2>Select a Gang to Apply</h2>
@@ -95,21 +97,38 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
   </div>
 </section>
 
+<!-- Civilian Tab -->
 <section id="civ" class="tab-content">
   <div class="card"><h2>Civilian Jobs</h2><p>All civilian occupations and their details in-game.</p></div>
   <div class="card"><h2>Events & Activities</h2><p>Community events and civilian operations happening now.</p></div>
 </section>
 
+<!-- Support Tickets Tab -->
 <section id="support" class="tab-content">
-  <div class="card"><h2>Open Tickets</h2><p>Check or submit support tickets for assistance from admins.</p></div>
-  <div class="card"><h2>Closed Tickets</h2><p>Review resolved support tickets and their outcomes.</p></div>
+  <div class="card">
+    <h3>Open a Support Ticket</h3>
+    <form id="supportTicketForm">
+      <input type="text" name="discord" placeholder="Your Discord ID (numeric)" required>
+      <select name="department" required>
+        <option value="" disabled selected>Select Department</option>
+        <option value="Internal Operations">Internal Operations</option>
+        <option value="Staff Director">Staff Director</option>
+        <option value="ESD">ESD</option>
+        <option value="Support Director">Support Director</option>
+        <option value="Support">Support</option>
+      </select>
+      <textarea name="issue" placeholder="Describe your issue" required></textarea>
+      <button type="submit">Submit Ticket</button>
+    </form>
+  </div>
 </section>
 
+<!-- Discord Tab -->
 <section id="discord" class="tab-content">
   <div class="card">
     <h2>Join our Discord!</h2>
     <p>Connect with the community and staff in real-time.</p>
-    <a href="https://discord.gg/YOUR_DISCORD_LINK" class="discord-btn" target="_blank">Join Discord</a>
+    <a href="https://discord.gg/6PzCRaXv" class="discord-btn" target="_blank">Join Discord</a>
   </div>
 </section>
 
@@ -139,14 +158,14 @@ gangButtons.forEach(btn => {
   });
 });
 
-// Discord webhook submission
-const forms = document.querySelectorAll('.gang-form form');
-forms.forEach(form => {
+// Gang Applications Webhook
+const gangFormsForms = document.querySelectorAll('.gang-form form');
+gangFormsForms.forEach(form => {
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const data = new FormData(form);
-    const discordID = data.get('discord').replace(/[^0-9]/g,''); // ensure numeric
-    const mention = `<@${discordID}>`; // auto ping
+    const discordID = data.get('discord').replace(/[^0-9]/g,'');
+    const mention = `<@${discordID}>`;
     const payload = {
       content: `**New Gang Application: ${form.dataset.gang}**\n` +
                `**Name:** ${data.get('name')}\n` +
@@ -170,6 +189,49 @@ forms.forEach(form => {
       console.error(err);
     }
   });
+});
+
+// Support Ticket System
+const webhooks = {
+  "Internal Operations": "https://discord.com/api/webhooks/1486618386384556102/c5tVM_ZjyBGvVr2t6HSGRVwe71Bx1_TTICbzZN3Z7h4rfxtBU89xCEZzqCmQqT5NfuxR",
+  "Staff Director": "https://discord.com/api/webhooks/1486618385306484758/fyhkkHEJdkcES1WPqD5TQ0tI1PVGPm7MGMNlJg-xwXKNk1N0OOGwTY98WFf7hHYNRL6F",
+  "ESD": "https://discord.com/api/webhooks/1486618351576027227/1333a4BB4USO4ivks7GOYwzDTtBlPXScohxWtO-FcNPKWXf2tCJue3_YdaSu4z4mWftq",
+  "Support Director": "YOUR_SUPPORT_DIRECTOR_WEBHOOK",
+  "Support": "YOUR_SUPPORT_WEBHOOK"
+};
+
+document.getElementById('supportTicketForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const discordID = data.get('discord').replace(/[^0-9]/g,'');
+  const department = data.get('department');
+  const issue = data.get('issue');
+
+  if(!discordID || !department || !issue){
+    alert("Please fill out all fields.");
+    return;
+  }
+
+  const payload = {
+    content: `**New Support Ticket: ${department}**\n` +
+             `**Discord:** <@${discordID}>\n` +
+             `**Issue:** ${issue}\n\n` +
+             `Staff: Please respond to this ticket.`
+  };
+
+  try{
+    await fetch(webhooks[department], {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    alert("Ticket submitted! Staff will contact you via Discord.");
+    form.reset();
+  } catch(err){
+    console.error(err);
+    alert("Failed to submit ticket. Check webhook.");
+  }
 });
 </script>
 </body>
