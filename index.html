@@ -5,53 +5,70 @@
   <title>GSRP Panel</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- PARTICLES BACKGROUND -->
-  <canvas id="particles"></canvas>
+<!-- LOADER -->
+<div id="loader">
+  <img src="logo.png" class="logo">
+</div>
 
-  <!-- HEADER -->
-  <header>
-    <h1>Golden State RP</h1>
-  </header>
+<!-- BACKGROUND PARTICLES -->
+<canvas id="particles"></canvas>
 
-  <!-- NAV -->
-  <nav>
-    <button onclick="openTab('gangs')">Gangs</button>
-    <button onclick="openTab('civ')">Civilian Ops</button>
-    <button onclick="openTab('support')">Support</button>
-    <button onclick="openTab('manager')">Manager</button>
-    <button onclick="openTab('discord')">Discord</button>
-  </nav>
+<!-- HEADER -->
+<header>
+  Golden State RP
+</header>
 
-  <!-- CONTENT -->
-  <main>
+<!-- NAV -->
+<nav>
+  <button onclick="openTab('home')">Home</button>
+  <button onclick="openTab('gangs')">Gangs</button>
+  <button onclick="openTab('civ')">Civilian</button>
+  <button onclick="openTab('support')">Support</button>
+  <button onclick="openTab('manager')">Manager</button>
+</nav>
 
-    <section id="gangs" class="tab active">
+<!-- CONTENT -->
+<main>
+
+  <div id="home" class="tab active">
+    <div class="card">
+      <h2>Welcome</h2>
+      <p>Golden State Roleplay Control Panel</p>
+    </div>
+  </div>
+
+  <div id="gangs" class="tab">
+    <div class="card">
       <h2>Gangs</h2>
-      <p>Manage gang applications and activity.</p>
-    </section>
+      <p>Gang applications and management.</p>
+    </div>
+  </div>
 
-    <section id="civ" class="tab">
+  <div id="civ" class="tab">
+    <div class="card">
       <h2>Civilian Operations</h2>
-    </section>
+    </div>
+  </div>
 
-    <section id="support" class="tab">
-      <h2>Support Tickets</h2>
-    </section>
+  <div id="support" class="tab">
+    <div class="card">
+      <h2>Support</h2>
+      <p>Tickets and assistance.</p>
+    </div>
+  </div>
 
-    <section id="manager" class="tab">
+  <div id="manager" class="tab">
+    <div class="card">
       <h2>Manager Panel</h2>
-      <p>Restricted tools (no login required for now)</p>
-    </section>
+      <p>Administrative controls.</p>
+    </div>
+  </div>
 
-    <section id="discord" class="tab">
-      <h2>Discord</h2>
-      <a href="#">Join Discord</a>
-    </section>
+</main>
 
-  </main>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
