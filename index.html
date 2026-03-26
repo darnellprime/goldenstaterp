@@ -7,53 +7,56 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="screen">
-  <div class="login-box">
-    <h1>Manager Login</h1>
+<!-- MAIN PANEL -->
+<div class="container">
 
-    <input type="text" id="username" placeholder="Username" autocomplete="off">
-    <input type="password" id="password" placeholder="Password" autocomplete="off">
-
-    <button onclick="login()">Login</button>
-
-    <p id="error" class="error"></p>
-
-    <div class="test-accounts">
-      <p><b>Test Accounts</b></p>
-      <p>Owner: <code>owner / owner123</code></p>
-      <p>Admin: <code>admin / admin123</code></p>
-      <p>FTO: <code>fto / fto123</code></p>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN DASHBOARD -->
-<div id="dashboard" class="screen hidden">
-  <h1>Control Panel</h1>
+  <h1>GSRP Control Panel</h1>
 
   <div class="tabs">
     <button onclick="openTab('roster')">Roster</button>
     <button onclick="openTab('applications')">Applications</button>
     <button onclick="openTab('logs')">Logs</button>
+    <button onclick="requireManager()">Manager</button>
   </div>
 
   <div id="roster" class="tab">
     <h2>Roster</h2>
-    <p>Calls, Promote, Discharge coming soon...</p>
+    <p>Roster system loading...</p>
   </div>
 
   <div id="applications" class="tab hidden">
     <h2>Applications</h2>
-    <p>Application system coming soon...</p>
+    <p>Applications system loading...</p>
   </div>
 
   <div id="logs" class="tab hidden">
     <h2>Logs</h2>
-    <p>Webhook logs coming soon...</p>
+    <p>Logs system loading...</p>
   </div>
 
-  <button onclick="logout()">Logout</button>
+  <div id="managerPanel" class="tab hidden">
+    <h2>Manager Panel</h2>
+    <p>Restricted Access</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal hidden">
+  <div class="modal-box">
+    <h2>Manager Login</h2>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+    <button onclick="closeLogin()">Cancel</button>
+
+    <p id="error" class="error"></p>
+
+    <p class="small">Test: owner / owner123</p>
+  </div>
 </div>
 
 <script src="script.js"></script>

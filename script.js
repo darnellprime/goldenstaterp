@@ -5,6 +5,26 @@ const users = [
   { username: "fto", password: "fto123", role: "FTO" }
 ];
 
+let currentUser = null;
+
+// TAB SYSTEM
+function openTab(tabName) {
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.add("hidden");
+  });
+
+  document.getElementById(tabName).classList.remove("hidden");
+}
+
+// REQUIRE LOGIN ONLY FOR MANAGER
+function requireManager() {
+  if (currentUser && (currentUser.role === "Owner" || currentUser.role === "Admin")) {
+    openTab("managerPanel");
+  } else {
+    document.getElementById("loginModal").classList.remove("hidden");
+  }
+}
+
 // LOGIN FUNCTION
 function login() {
   const username = document.getElementById("username").value.trim();
@@ -14,45 +34,31 @@ function login() {
   const user = users.find(u => u.username === username && u.password === password);
 
   if (user) {
-    localStorage.setItem("user", JSON.stringify(user));
+    currentUser = user;
+    error.textContent = "";
 
-    document.getElementById("loginScreen").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
+    document.getElementById("loginModal").classList.add("hidden");
 
-    openTab("roster");
+    openTab("managerPanel");
   } else {
     error.textContent = "Invalid login";
   }
 }
 
-// ENTER KEY SUPPORT
-document.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    login();
-  }
-});
+// CLOSE LOGIN
+function closeLogin() {
+  document.getElementById("loginModal").classList.add("hidden");
+}
 
 // LOGOUT
 function logout() {
-  localStorage.removeItem("user");
+  currentUser = null;
   location.reload();
 }
 
-// TAB SWITCHING
-function openTab(tabName) {
-  document.querySelectorAll(".tab").forEach(tab => {
-    tab.classList.add("hidden");
-  });
-
-  document.getElementById(tabName).classList.remove("hidden");
-}
-
-// AUTO LOGIN IF ALREADY LOGGED IN
-window.onload = function() {
-  const user = localStorage.getItem("user");
-
-  if (user) {
-    document.getElementById("loginScreen").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
+// ENTER KEY SUPPORT
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !document.getElementById("loginModal").classList.contains("hidden")) {
+    login();
   }
-};
+});
