@@ -1,23 +1,12 @@
-// ===== LOADER =====
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    document.getElementById("loader").style.opacity = "0";
-    setTimeout(() => {
-      document.getElementById("loader").style.display = "none";
-    }, 500);
-  }, 1500);
-});
+// ===== TAB SYSTEM =====
+function openTab(tabName) {
+  const tabs = document.querySelectorAll(".tab");
+  tabs.forEach(tab => tab.classList.remove("active"));
 
-// ===== TABS =====
-function openTab(tabId) {
-  document.querySelectorAll(".tab").forEach(tab => {
-    tab.classList.remove("active");
-  });
-
-  document.getElementById(tabId).classList.add("active");
+  document.getElementById(tabName).classList.add("active");
 }
 
-// ===== PARTICLES =====
+// ===== GOLD PARTICLES =====
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
@@ -26,13 +15,13 @@ canvas.height = window.innerHeight;
 
 const particles = [];
 
-for (let i = 0; i < 60; i++) {
+for (let i = 0; i < 80; i++) {
   particles.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.5,
-    vy: (Math.random() - 0.5) * 0.5,
-    size: Math.random() * 2
+    size: Math.random() * 2 + 1,
+    speedX: (Math.random() - 0.5) * 0.5,
+    speedY: (Math.random() - 0.5) * 0.5
   });
 }
 
@@ -40,13 +29,13 @@ function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
+    p.x += p.speedX;
+    p.y += p.speedY;
 
-    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
 
-    ctx.fillStyle = "#00c2ff";
+    ctx.fillStyle = "gold";
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fill();
