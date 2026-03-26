@@ -1,148 +1,239 @@
-<script>
-// ================= WEBHOOKS =================
-const WEBHOOKS = {
-  gangs: "https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h",
-  departments: "https://discord.com/api/webhooks/1479014216605372571/1EESmLywBplTXsMriDl3jJ0kmYFBsARJ5j1j2LUJqHWrFkb0C9aVD2CdOQZpu2skPemHK",
-  civ: "PASTE_CIV_WEBHOOK",
-  teams: "PASTE_TEAM_WEBHOOK",
-  support: "https://discord.com/api/webhooks/1479019533745258528/3CMhzGU_-41C0krJsz-TgtDRmislWfbnFwM9hHEARqrwjWD9jhLy8xBSrks_UO41jkkB",
-  logs: "PASTE_LOG_WEBHOOK"
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GSRP Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// ================= TAB SYSTEM =================
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
+body{background:#0a0f1a;color:#d4af37;}
+
+.container{display:flex;height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+width:230px;
+background:#0d1324;
+padding:20px;
+border-right:1px solid rgba(212,175,55,0.2);
+}
+
+.logo{color:#fff;font-size:18px;margin-bottom:20px}
+
+.nav-link{
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+cursor:pointer;
+color:#aaa;
+transition:.3s;
+}
+.nav-link:hover{background:#1a2238;color:#fff}
+.nav-link.active{background:#d4af37;color:#000}
+
+/* MAIN */
+.main{flex:1;padding:25px;overflow-y:auto}
+
+/* CARDS */
+.card{
+background:#111827;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+border:1px solid rgba(212,175,55,0.2);
+}
+
+/* INPUTS */
+input,textarea,select{
+width:100%;
+margin-top:10px;
+padding:10px;
+background:#0b1220;
+border:1px solid #333;
+color:#fff;
+border-radius:6px;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+background:#d4af37;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{background:#ffd700}
+
+/* TABS */
+.tab{display:none}
+.tab.active{display:block}
+
+/* LOGIN MODAL */
+#loginModal{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+</style>
+</head>
+
+<body>
+
+<div id="loginModal">
+  <div class="card" style="width:300px">
+    <h2>Staff Login</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<div class="logo">GSRP Panel</div>
+
+<div class="nav-link active" data-tab="home">Home</div>
+<div class="nav-link" data-tab="gangs">Gangs</div>
+<div class="nav-link" data-tab="departments">Departments</div>
+<div class="nav-link" data-tab="teams">Teams</div>
+<div class="nav-link" data-tab="support">Support</div>
+<div class="nav-link" onclick="openLogin()">🔐 Login</div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- HOME -->
+<div id="home" class="tab active">
+<div class="card">
+<h2>Welcome to Golden State RP</h2>
+<p>Control Panel & Applications</p>
+</div>
+
+<div class="card">
+<h3>Quick Access</h3>
+<a href="https://discord.gg/6PzCRaXv" target="_blank">
+<button>Join Discord</button>
+</a>
+
+<button onclick="alert('Add your server connect link')">Join Server</button>
+<button onclick="alert('Add socials links')">Socials</button>
+</div>
+</div>
+
+<!-- GANG APPLICATION -->
+<div id="gangs" class="tab">
+<div class="card">
+<h2>Gang Application</h2>
+
+<form id="gangForm">
+<input placeholder="In-Game Name" required>
+<input placeholder="Discord ID" required>
+
+<textarea placeholder="Why do you want to join this gang?" required></textarea>
+
+<textarea placeholder="Describe a loyalty RP scenario (detailed)" required></textarea>
+
+<textarea placeholder="How would you handle conflict with another gang?" required></textarea>
+
+<textarea placeholder="What can you bring to the gang?" required></textarea>
+
+<button>Submit Application</button>
+</form>
+</div>
+</div>
+
+<!-- DEPARTMENTS -->
+<div id="departments" class="tab">
+<div class="card">
+<h2>Department Application</h2>
+
+<form>
+<input placeholder="Full Name" required>
+<input placeholder="Discord ID" required>
+
+<textarea placeholder="Why do you want to join Law Enforcement?" required></textarea>
+
+<textarea placeholder="Explain a traffic stop scenario in detail" required></textarea>
+
+<textarea placeholder="How would you handle a fleeing suspect?" required></textarea>
+
+<textarea placeholder="What does good RP mean to you?" required></textarea>
+
+<button>Submit Application</button>
+</form>
+</div>
+</div>
+
+<!-- TEAMS -->
+<div id="teams" class="tab">
+<div class="card">
+<h2>Team Application</h2>
+
+<form>
+<input placeholder="Name" required>
+<input placeholder="Discord ID" required>
+
+<textarea placeholder="Why do you want this position?" required></textarea>
+
+<textarea placeholder="Describe a time you handled responsibility" required></textarea>
+
+<textarea placeholder="How active are you?" required></textarea>
+
+<button>Submit</button>
+</form>
+</div>
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="tab">
+<div class="card">
+<h2>Support Ticket</h2>
+
+<form>
+<input placeholder="Discord ID" required>
+<textarea placeholder="Explain your issue" required></textarea>
+<button>Submit Ticket</button>
+</form>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+// TABS
 document.querySelectorAll('.nav-link').forEach(btn=>{
 btn.onclick=()=>{
 document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
 btn.classList.add('active');
+
 document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
 document.getElementById(btn.dataset.tab)?.classList.add('active');
-}
-});
-
-// ================= FORM SWITCH =================
-function openForm(id){
-document.querySelectorAll('.app-form').forEach(f=>{
-  f.style.display='none';
-});
-document.getElementById(id).style.display='block';
-}
-
-// ================= GENERATE APP ID =================
-function generateID(){
-  return "GSRP-" + Math.floor(100000 + Math.random()*900000);
-}
-
-// ================= SEND EMBED =================
-async function sendEmbed(webhook, embed){
-  await fetch(webhook,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({embeds:[embed]})
-  });
-}
-
-// ================= MAIN FORM HANDLER =================
-document.querySelectorAll("form").forEach(form=>{
-form.addEventListener("submit", async e=>{
-e.preventDefault();
-
-const appID = generateID();
-const inputs = form.querySelectorAll("input, textarea");
-
-let fields = [];
-let discordID = "";
-
-inputs.forEach(input=>{
-  let label = input.placeholder || "Response";
-  let value = input.value || "N/A";
-
-  if(label.toLowerCase().includes("discord")){
-    discordID = value.replace(/[^0-9]/g,'');
-    value = `<@${discordID}>`;
-  }
-
-  fields.push({
-    name: label,
-    value: value,
-    inline:false
-  });
-});
-
-// Detect section
-let category = "support";
-if(form.closest("#gangs")) category = "gangs";
-if(form.closest("#departments")) category = "departments";
-if(form.closest("#civ")) category = "civ";
-if(form.closest("#teams")) category = "teams";
-
-// ================= EMBED =================
-const embed = {
-  title: `📩 New ${category.toUpperCase()} Application`,
-  color: 0xFFD700,
-  description: `**Application ID:** ${appID}`,
-  fields: fields,
-  footer: {text:"Golden State RP"},
-  timestamp: new Date()
 };
-
-// ================= ACTION PANEL =================
-const actions = {
-  title:"⚖️ Staff Actions",
-  color: 0x00ff00,
-  description:
-`**Application ID:** ${appID}
-
-👤 User: <@${discordID || "Unknown"}>
-
-✅ Accept:
-\`!accept ${appID} ${discordID}\`
-
-❌ Deny:
-\`!deny ${appID} ${discordID} [reason]\``
-};
-
-// ================= SEND =================
-await sendEmbed(WEBHOOKS[category], embed);
-await sendEmbed(WEBHOOKS[category], actions);
-
-// Log system
-await sendEmbed(WEBHOOKS.logs,{
-  title:"📊 Application Logged",
-  color:0x3498db,
-  description:`Application ${appID} submitted to ${category}`
 });
 
-alert("Application Submitted Successfully!");
-form.reset();
+// LOGIN SYSTEM
+const accounts=[
+{u:"esd1",p:"123",r:"ESD"},
+{u:"esd2",p:"123",r:"ESD"},
+{u:"esd3",p:"123",r:"ESD"},
 
-});
-});
+{u:"civ1",p:"123",r:"CIV"},
+{u:"civ2",p:"123",r:"CIV"},
 
-// ================= SUPPORT SYSTEM =================
-document.querySelector("#support .btn").onclick = async ()=>{
-const discord = document.querySelector("#support input").value.replace(/[^0-9]/g,'');
-const issue = document.querySelector("#support textarea").value;
-
-const embed = {
-  title:"🛠️ Support Ticket",
-  color:0xffa500,
-  fields:[
-    {name:"User", value:`<@${discord}>`},
-    {name:"Issue", value:issue}
-  ],
-  timestamp:new Date()
-};
-
-await sendEmbed(WEBHOOKS.support, embed);
-
-alert("Ticket Submitted!");
-};
-
-// ================= LOGIN =================
-const accounts = [
-  {u:"esd1",p:"123",r:"ESD"},
-  {u:"civ1",p:"123",r:"CIV"},
-  {u:"staff1",p:"123",r:"STAFF"}
+{u:"staff1",p:"123",r:"STAFF"},
+{u:"staff2",p:"123",r:"STAFF"}
 ];
 
 function openLogin(){
@@ -150,16 +241,19 @@ document.getElementById("loginModal").style.display="flex";
 }
 
 function login(){
-let u = document.getElementById("user").value;
-let p = document.getElementById("pass").value;
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
 
-let found = accounts.find(a=>a.u===u && a.p===p);
+let acc=accounts.find(a=>a.u===u && a.p===p);
 
-if(found){
-alert(`Logged in as ${found.r}`);
-loginModal.style.display="none";
+if(acc){
+alert("Logged in as "+acc.r);
+document.getElementById("loginModal").style.display="none";
 }else{
-alert("Invalid login");
+alert("Invalid");
 }
 }
 </script>
+
+</body>
+</html>
