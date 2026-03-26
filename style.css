@@ -2,18 +2,16 @@ body {
   background: #000;
   color: gold;
   font-family: Arial;
-  overflow: hidden;
 }
 
-/* subtle moving pixel effect */
 body::before {
   content: "";
   position: fixed;
   width: 200%;
   height: 200%;
   background: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
-  opacity: 0.15;
-  animation: move 60s linear infinite;
+  opacity: 0.12;
+  animation: move 80s linear infinite;
 }
 
 @keyframes move {
@@ -23,7 +21,6 @@ body::before {
 
 button {
   background: gold;
-  color: black;
   border: none;
   padding: 10px;
   margin: 5px;
@@ -31,7 +28,6 @@ button {
 }
 
 input {
-  display: block;
   margin: 5px;
   padding: 8px;
 }
