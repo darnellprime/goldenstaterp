@@ -5,61 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Golden State Roleplay</title>
   <style>
-    /* ========== Reset & Base ========== */
+    /* ===== Reset & Base ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-    body { background: #0b0c10; color: #c5c6c7; }
+    body { background: #0a0a0a; color: #f5c518; transition: background 0.3s, color 0.3s; }
     a { text-decoration: none; color: inherit; }
     ul { list-style: none; }
 
-    /* ========== Header ========== */
+    /* ===== Header ===== */
     header {
-      background: linear-gradient(90deg, #1f2833, #45a29e);
+      background: linear-gradient(90deg, #000000, #1c1c1c);
       padding: 1rem 2rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      border-bottom: 3px solid #66fcf1;
+      align-items: center;
+      border-bottom: 3px solid #f5c518;
     }
-    header h1 { color: #66fcf1; font-size: 1.8rem; letter-spacing: 1px; }
+    header h1 { color: #f5c518; font-size: 2rem; letter-spacing: 2px; }
 
-    nav ul { display: flex; gap: 2rem; }
+    nav ul { display: flex; gap: 1.5rem; }
     nav li { cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: 0.3s; }
-    nav li:hover, nav li.active { background: #66fcf1; color: #0b0c10; }
+    nav li:hover, nav li.active { background: #f5c518; color: #0a0a0a; }
 
-    /* ========== Tabs ========== */
+    /* ===== Tabs ===== */
     .tab-content { padding: 2rem; display: none; }
     .tab-content.active { display: block; }
 
-    /* ========== Card Styles ========== */
+    /* ===== Cards ===== */
     .card {
-      background: #1f2833;
+      background: #1a1a1a;
       padding: 1.5rem;
-      border-radius: 10px;
+      border-radius: 12px;
       margin-bottom: 1rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-      transition: transform 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .card:hover { transform: translateY(-5px); }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.8); }
 
-    /* ========== Discord Button ========== */
-    .discord-btn {
-      display: inline-block;
-      padding: 0.8rem 1.5rem;
-      background: #7289da;
-      color: #fff;
+    /* ===== Buttons ===== */
+    button, .discord-btn {
+      cursor: pointer;
+      border: none;
+      padding: 0.7rem 1.5rem;
       border-radius: 8px;
       font-weight: bold;
       transition: 0.3s;
-      margin-top: 1rem;
+      background: #f5c518;
+      color: #0a0a0a;
     }
-    .discord-btn:hover { background: #5b6eae; }
+    button:hover, .discord-btn:hover { background: #d4a100; }
 
-    /* ========== Footer ========== */
+    /* ===== Forms ===== */
+    form { display: flex; flex-direction: column; gap: 0.8rem; }
+    input, textarea {
+      padding: 0.7rem;
+      border-radius: 5px;
+      border: 1px solid #f5c518;
+      background: #0a0a0a;
+      color: #f5c518;
+      resize: none;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #d4a100; }
+
+    /* ===== Footer ===== */
     footer {
       text-align: center;
       padding: 1rem;
-      background: #1f2833;
-      color: #45a29e;
+      background: #1a1a1a;
+      color: #f5c518;
       font-size: 0.9rem;
       margin-top: 2rem;
     }
@@ -67,7 +79,7 @@
 </head>
 <body>
 
-  <!-- ========== HEADER ========== -->
+  <!-- ===== HEADER ===== -->
   <header>
     <h1>Golden State RP</h1>
     <nav>
@@ -80,19 +92,75 @@
     </nav>
   </header>
 
-  <!-- ========== TAB CONTENT ========== -->
+  <!-- ===== TAB CONTENT ===== -->
   <main>
+    <!-- ===== GANGS TAB ===== -->
     <section id="gangs" class="tab-content active">
       <div class="card">
-        <h2>Gang Listings</h2>
-        <p>View all active gangs and their leaders in Golden State RP.</p>
+        <h2>Select a Gang to Apply</h2>
+        <div style="display:flex; gap:1rem; margin-top:1rem;">
+          <button class="gang-btn" data-gang="hustlers">400 Hustlers</button>
+          <button class="gang-btn" data-gang="blueDevils">Los Blue Devil's</button>
+          <button class="gang-btn" data-gang="graveDiggas">Grave Diggas</button>
+        </div>
       </div>
-      <div class="card">
-        <h2>Gang Operations</h2>
-        <p>Information on territory control and ongoing gang operations.</p>
+
+      <!-- 400 Hustlers Form -->
+      <div class="gang-form" id="hustlers" style="display:none;">
+        <div class="card">
+          <h3>400 Hustlers Application</h3>
+          <form>
+            <label>Your In-Game Name:</label>
+            <input type="text" placeholder="e.g. Johnny Blaze" required>
+            <label>Why do you want to join the 400 Hustlers?</label>
+            <textarea placeholder="Tell us your motivation..." required></textarea>
+            <label>What is your preferred gang role? (Driver, Enforcer, Scout)</label>
+            <input type="text" placeholder="Role..." required>
+            <label>Provide a brief RP scenario showing your loyalty to the gang:</label>
+            <textarea placeholder="RP Example..." required></textarea>
+            <button type="submit">Submit Application</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Los Blue Devil's Form -->
+      <div class="gang-form" id="blueDevils" style="display:none;">
+        <div class="card">
+          <h3>Los Blue Devil's Application</h3>
+          <form>
+            <label>Your In-Game Name:</label>
+            <input type="text" placeholder="e.g. Miguel Santos" required>
+            <label>Why do you want to join Los Blue Devil's?</label>
+            <textarea placeholder="Explain your intentions..." required></textarea>
+            <label>Which territory would you like to represent?</label>
+            <input type="text" placeholder="Territory name..." required>
+            <label>RP Scenario: How would you handle a rival gang encounter?</label>
+            <textarea placeholder="Describe your approach..." required></textarea>
+            <button type="submit">Submit Application</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Grave Diggas Form -->
+      <div class="gang-form" id="graveDiggas" style="display:none;">
+        <div class="card">
+          <h3>Grave Diggas Application</h3>
+          <form>
+            <label>Your In-Game Name:</label>
+            <input type="text" placeholder="e.g. Reaper X" required>
+            <label>Why are you interested in Grave Diggas?</label>
+            <textarea placeholder="Motivation..." required></textarea>
+            <label>Preferred gang activities? (e.g. Heists, Territory Control, Recon)</label>
+            <input type="text" placeholder="Activities..." required>
+            <label>RP Scenario: How would you plan a heist with your gang?</label>
+            <textarea placeholder="RP Planning..." required></textarea>
+            <button type="submit">Submit Application</button>
+          </form>
+        </div>
       </div>
     </section>
 
+    <!-- ===== CIVILIAN OPERATIONS TAB ===== -->
     <section id="civ" class="tab-content">
       <div class="card">
         <h2>Civilian Jobs</h2>
@@ -104,6 +172,7 @@
       </div>
     </section>
 
+    <!-- ===== SUPPORT TICKETS TAB ===== -->
     <section id="support" class="tab-content">
       <div class="card">
         <h2>Open Tickets</h2>
@@ -115,6 +184,7 @@
       </div>
     </section>
 
+    <!-- ===== DISCORD TAB ===== -->
     <section id="discord" class="tab-content">
       <div class="card">
         <h2>Join our Discord!</h2>
@@ -128,18 +198,27 @@
     &copy; 2026 Golden State Roleplay | All Rights Reserved
   </footer>
 
-  <!-- ========== TAB SCRIPT ========== -->
+  <!-- ===== SCRIPT ===== -->
   <script>
+    // Main tab navigation
     const tabs = document.querySelectorAll('.tab-link');
     const contents = document.querySelectorAll('.tab-content');
-
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-
         contents.forEach(c => c.classList.remove('active'));
         document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Gang selection inside Gangs tab
+    const gangButtons = document.querySelectorAll('.gang-btn');
+    const gangForms = document.querySelectorAll('.gang-form');
+    gangButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        gangForms.forEach(f => f.style.display = 'none'); // hide all forms
+        document.getElementById(btn.dataset.gang).style.display = 'block'; // show selected
       });
     });
   </script>
