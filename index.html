@@ -14,7 +14,6 @@ color:#fff;
 overflow:hidden;
 }
 
-/* BACKGROUND */
 .bg{
 position:fixed;
 top:0;left:0;
@@ -27,24 +26,14 @@ background-position:center;
 z-index:-2;
 }
 
-/* GLOW OVERLAY */
-.bg::after{
-content:"";
-position:absolute;
-width:100%;height:100%;
-background: radial-gradient(circle,#ffd70033,transparent);
-}
-
-/* LAYOUT */
 .container{display:flex;height:100vh}
 
-/* SIDEBAR */
 .sidebar{
 width:240px;
 background:rgba(10,10,30,0.6);
 backdrop-filter:blur(20px);
-border-right:1px solid rgba(255,255,255,0.05);
 padding:20px;
+overflow-y:auto;
 }
 
 .logo{
@@ -67,7 +56,6 @@ color:#aaa;
 .nav-link:hover{
 background:rgba(255,215,0,0.15);
 color:#fff;
-box-shadow:0 0 15px rgba(255,215,0,0.4);
 }
 
 .nav-link.active{
@@ -75,84 +63,44 @@ background:linear-gradient(90deg,#ffd700,#b89600);
 color:#000;
 }
 
-/* MAIN */
 .main{
 flex:1;
 padding:25px;
 overflow-y:auto;
 }
 
-/* CARDS */
 .card{
 background:rgba(20,25,50,0.5);
 backdrop-filter:blur(15px);
-border:1px solid rgba(255,255,255,0.05);
 border-radius:15px;
 padding:20px;
 margin-bottom:20px;
-transition:.3s;
 }
 
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 0 25px rgba(255,215,0,0.2);
-}
-
-/* BUTTONS */
 .btn{
 padding:10px 15px;
 border-radius:10px;
 border:none;
 cursor:pointer;
-font-weight:bold;
 background:linear-gradient(90deg,#ffd700,#b89600);
 color:#000;
-transition:.3s;
+font-weight:bold;
 }
 
-.btn:hover{
-box-shadow:0 0 20px gold;
-transform:scale(1.05);
-}
-
-/* GRID */
-.grid{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-margin-top:15px;
-}
-
-.grid div{
-padding:10px 15px;
-border-radius:10px;
-background:#0b1220;
-cursor:pointer;
-transition:.3s;
-}
-
-.grid div:hover{
-transform:scale(1.08);
-box-shadow:0 0 15px gold;
-}
-
-/* FORMS */
 input,textarea{
 width:100%;
 margin-top:10px;
 padding:10px;
 border-radius:8px;
-border:1px solid rgba(255,255,255,0.1);
 background:#0b1220;
 color:#fff;
+border:1px solid rgba(255,255,255,0.1);
 }
 
 textarea{min-height:80px}
 
-/* TABS */
 .tab{display:none}
 .tab.active{display:block}
-
 .form{display:none}
 </style>
 </head>
@@ -168,8 +116,14 @@ textarea{min-height:80px}
 <div class="logo">GSRP</div>
 
 <div class="nav-link active" data-tab="home">🏠 Home</div>
-<div class="nav-link" data-tab="gangs">🔫 Gangs</div>
+<div class="nav-link" data-tab="rules">📜 Rules</div>
+<div class="nav-link" data-tab="applications">📋 Applications</div>
+<div class="nav-link" data-tab="tickets">🎫 Support</div>
+<div class="nav-link" data-tab="news">📰 News</div>
+<div class="nav-link" data-tab="staff">👥 Staff</div>
+<div class="nav-link" data-tab="discord">🔗 Discord</div>
 <div class="nav-link" data-tab="departments">🚓 Departments</div>
+<div class="nav-link" data-tab="gangs">🔫 Gangs</div>
 
 </div>
 
@@ -182,110 +136,157 @@ textarea{min-height:80px}
 <h2>Golden State Roleplay</h2>
 <p>Next Generation Roleplay Experience</p>
 </div>
+</div>
 
+<!-- RULES -->
+<div id="rules" class="tab">
 <div class="card">
-<button class="btn">Join Server</button>
-<button class="btn">Discord</button>
+<h2>Server Rules</h2>
+<p>- No RDM/VDM</p>
+<p>- No FailRP</p>
+<p>- Respect staff</p>
+<p>- Follow Discord rules</p>
+</div>
+</div>
+
+<!-- APPLICATION HUB -->
+<div id="applications" class="tab">
+<div class="card">
+<h2>Applications</h2>
+<p>Select what you want to apply for</p>
+</div>
+</div>
+
+<!-- TICKETS -->
+<div id="tickets" class="tab">
+<div class="card">
+<h2>Support Tickets</h2>
+<input id="ticketName" placeholder="Your Name">
+<textarea id="ticketMsg" placeholder="Describe your issue"></textarea>
+<button class="btn" onclick="sendTicket()">Submit Ticket</button>
+</div>
+</div>
+
+<!-- NEWS -->
+<div id="news" class="tab">
+<div class="card">
+<h2>Server Updates</h2>
+<p>- New UI launched</p>
+<p>- Application system upgraded</p>
+</div>
+</div>
+
+<!-- STAFF -->
+<div id="staff" class="tab">
+<div class="card">
+<h2>Staff Team</h2>
+<p>Owner: You</p>
+<p>Developers: TBD</p>
+</div>
+</div>
+
+<!-- DISCORD -->
+<div id="discord" class="tab">
+<div class="card">
+<h2>Join Our Discord</h2>
+<a href="#" class="btn">Open Discord</a>
 </div>
 </div>
 
 <!-- GANGS -->
 <div id="gangs" class="tab">
 <div class="card">
-<h2>Select a Gang</h2>
-<div class="grid">
+<h2>Gang Applications</h2>
 <div onclick="openForm('hustlers')">400 Hustlers</div>
 <div onclick="openForm('diggas')">Grave Diggas</div>
 <div onclick="openForm('devils')">Los Blue Devils</div>
 </div>
-</div>
 
 <div id="hustlers" class="card form">
-<h3>400 Hustlers Application</h3>
-<input placeholder="Name">
-<input placeholder="Discord ID">
-<textarea placeholder="Why do you want to join Hustlers?"></textarea>
-<textarea placeholder="Describe a loyalty scenario"></textarea>
-<button class="btn">Submit</button>
+<h3>400 Hustlers</h3>
+<input id="h_name" placeholder="Name">
+<input id="h_discord" placeholder="Discord ID">
+<textarea id="h_text"></textarea>
+<button class="btn" onclick="submitApp('Hustlers')">Submit</button>
 </div>
 
-<div id="diggas" class="card form">
-<h3>Grave Diggas Application</h3>
-<input placeholder="Name">
-<input placeholder="Discord ID">
-<textarea placeholder="Describe a heist plan"></textarea>
-<textarea placeholder="Escape from police scenario"></textarea>
-<button class="btn">Submit</button>
-</div>
-
-<div id="devils" class="card form">
-<h3>Los Blue Devils Application</h3>
-<input placeholder="Name">
-<input placeholder="Discord ID">
-<textarea placeholder="Territory control scenario"></textarea>
-<textarea placeholder="Gang war response"></textarea>
-<button class="btn">Submit</button>
-</div>
 </div>
 
 <!-- DEPARTMENTS -->
 <div id="departments" class="tab">
 <div class="card">
-<h2>Select Department</h2>
-<div class="grid">
-<div onclick="openForm('sasp')">SASP</div>
-<div onclick="openForm('bcso')">BCSO</div>
+<h2>Departments</h2>
 <div onclick="openForm('lspd')">LSPD</div>
-</div>
-</div>
-
-<div id="sasp" class="card form">
-<h3>SASP Application</h3>
-<input placeholder="Name">
-<input placeholder="Discord ID">
-<textarea placeholder="Felony traffic stop scenario"></textarea>
-<textarea placeholder="High-speed pursuit response"></textarea>
-<button class="btn">Submit</button>
-</div>
-
-<div id="bcso" class="card form">
-<h3>BCSO Application</h3>
-<input placeholder="Name">
-<input placeholder="Discord ID">
-<textarea placeholder="Rural patrol situation"></textarea>
-<textarea placeholder="Backup request handling"></textarea>
-<button class="btn">Submit</button>
+<div onclick="openForm('bcso')">BCSO</div>
+<div onclick="openForm('sasp')">SASP</div>
 </div>
 
 <div id="lspd" class="card form">
-<h3>LSPD Application</h3>
-<input placeholder="Name">
-<input placeholder="Discord ID">
-<textarea placeholder="Urban crime response"></textarea>
-<textarea placeholder="Crowd control scenario"></textarea>
-<button class="btn">Submit</button>
+<h3>LSPD</h3>
+<input id="l_name" placeholder="Name">
+<textarea id="l_text"></textarea>
+<button class="btn" onclick="submitApp('LSPD')">Submit</button>
 </div>
+
 </div>
 
 </div>
 </div>
 
 <script>
-// TABS
+
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1486832165630120179/LKjs9ZIfXKZPyi5lwd0z7gmTM02vOvgjFpsZV4ukjSTfkpU1qnCN7YjuL0EvMsOnLf6t";
+
+// TAB SWITCHING
 document.querySelectorAll('.nav-link').forEach(btn=>{
 btn.onclick=()=>{
 document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
 btn.classList.add('active');
+
 document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
 document.getElementById(btn.dataset.tab).classList.add('active');
 }
 });
 
-// FORMS
+// OPEN FORM
 function openForm(id){
 document.querySelectorAll('.form').forEach(f=>f.style.display='none');
 document.getElementById(id).style.display='block';
 }
+
+// APPLICATION WEBHOOK
+function submitApp(type){
+let name = document.getElementById(type.charAt(0).toLowerCase()+"_name")?.value || "";
+let discord = document.getElementById(type.charAt(0).toLowerCase()+"_discord")?.value || "";
+let text = document.getElementById(type.charAt(0).toLowerCase()+"_text")?.value || "";
+
+fetch(WEBHOOK_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+content:`📥 New Application\n\nType: ${type}\nName: ${name}\nDiscord: ${discord}\nInfo: ${text}`
+})
+});
+
+alert("Application Submitted!");
+}
+
+// SUPPORT TICKET WEBHOOK
+function sendTicket(){
+let name = document.getElementById("ticketName").value;
+let msg = document.getElementById("ticketMsg").value;
+
+fetch(WEBHOOK_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+content:`🎫 New Ticket\n\nName: ${name}\nMessage: ${msg}`
+})
+});
+
+alert("Ticket Sent!");
+}
+
 </script>
 
 </body>
