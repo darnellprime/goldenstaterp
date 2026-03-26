@@ -2,327 +2,258 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>GSRP Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Golden State RP Dashboard</title>
+
 <style>
-/* Reset & Base */
-* {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif;}
-body {background:#0a0a0a; color:#f5c518; overflow-x:hidden;}
-a {text-decoration:none; color:inherit;}
-button {cursor:pointer;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
+body{background:#0a0f1a;color:#d4af37;}
 
-/* Canvas Background */
-canvas {position:fixed; top:0; left:0; z-index:-1;}
+.container{display:flex;height:100vh}
 
-/* Layout */
-.container {display:flex; min-height:100vh;}
-.sidebar {width:220px; background:#111; border-right:2px solid #f5c518; display:flex; flex-direction:column; padding-top:2rem; position:relative;}
-.sidebar h2 {text-align:center; margin-bottom:2rem; color:#f5c518; font-size:1.5rem; letter-spacing:1px;}
-.nav-link {padding:1rem 2rem; display:flex; align-items:center; gap:1rem; cursor:pointer; color:#f5c518; transition:0.3s; border-left:4px solid transparent;}
-.nav-link:hover, .nav-link.active {background:#222; border-left:4px solid #f5c518; color:#fff;}
-.nav-link i {font-size:1.2rem;}
-.main-content {flex:1; padding:2rem; overflow-y:auto;}
+/* SIDEBAR */
+.sidebar{
+width:230px;
+background:#0d1324;
+padding:20px;
+border-right:1px solid rgba(212,175,55,0.2);
+}
 
-/* Card Styles */
-.card {background:#1a1a1a; padding:1.5rem; border-radius:12px; margin-bottom:1rem; box-shadow:0 8px 20px rgba(0,0,0,0.7); transition:transform .3s,box-shadow .3s;}
-.card:hover {transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.8);}
-button,.discord-btn {border:none;padding:.7rem 1.5rem;border-radius:8px;font-weight:bold;transition:.3s;background:#f5c518;color:#0a0a0a;}
-button:hover,.discord-btn:hover {background:#d4a100;}
-form {display:flex; flex-direction:column; gap:.8rem;}
-input,textarea,select {padding:.7rem;border-radius:5px;border:1px solid #f5c518;background:#0a0a0a;color:#f5c518;resize:none;}
-input:focus,textarea:focus,select:focus {outline:none;border-color:#d4a100;}
-footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size:.9rem;margin-top:2rem;}
+.logo{color:#fff;font-size:18px;margin-bottom:20px}
 
-/* Futuristic Buttons for Accept/Deny */
-.accept-btn {background:#0f0;color:#000;font-weight:bold;}
-.deny-btn {background:#f00;color:#fff;font-weight:bold;}
-.accept-btn:hover {background:#0c0;}
-.deny-btn:hover {background:#c00;}
+.nav-link{
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+cursor:pointer;
+color:#aaa;
+transition:.3s;
+}
+.nav-link:hover{background:#1a2238;color:#fff}
+.nav-link.active{background:#d4af37;color:#000}
+
+/* MAIN */
+.main{flex:1;padding:25px;overflow-y:auto}
+
+/* CARDS */
+.card{
+background:#111827;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+border:1px solid rgba(212,175,55,0.2);
+}
+
+/* INPUTS */
+input,textarea,select{
+width:100%;
+margin-top:10px;
+padding:10px;
+background:#0b1220;
+border:1px solid #333;
+color:#fff;
+border-radius:6px;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+background:#d4af37;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{background:#ffd700}
+
+/* TABS */
+.tab{display:none}
+.tab.active{display:block}
+
+/* LOGIN MODAL */
+#loginModal{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
 </style>
 </head>
+
 <body>
 
-<!-- Bear Particle Canvas -->
-<canvas id="bearCanvas"></canvas>
-
-<div class="container">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>GSRP Dashboard</h2>
-    <div class="nav-link active" data-tab="gangs"><i>🗡️</i> Gangs</div>
-    <div class="nav-link" data-tab="departments"><i>🏛️</i> Departments</div>
-    <div class="nav-link" data-tab="civilians"><i>⚖️</i> Civilians</div>
-    <div class="nav-link" data-tab="teams"><i>👥</i> Teams</div>
-    <div class="nav-link" data-tab="support"><i>🛠️</i> Support Tickets</div>
-    <div class="nav-link" data-tab="changelog"><i>📄</i> Changelog</div>
-    <div class="nav-link" data-tab="discord"><i>💬</i> Discord</div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main-content">
-
-    <!-- Gangs -->
-    <section id="gangs" class="tab-content active">
-      <div class="card">
-        <h2>Select a Gang to Apply</h2>
-        <div style="display:flex;gap:1rem;margin-top:1rem;">
-          <button class="gang-btn" data-gang="hustlers">400 Hustlers</button>
-          <button class="gang-btn" data-gang="blueDevils">Los Blue Devil's</button>
-          <button class="gang-btn" data-gang="graveDiggas">Grave Diggas</button>
-        </div>
-      </div>
-
-      <!-- Gang Forms -->
-      <div class="gang-form" id="hustlers" style="display:none;">
-        <div class="card">
-          <h3>400 Hustlers Application</h3>
-          <form data-gang="400 Hustlers">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
-            <textarea name="motivation" placeholder="Why join 400 Hustlers?" required></textarea>
-            <input type="text" name="role" placeholder="Preferred Role" required>
-            <textarea name="scenario" placeholder="RP Scenario showing loyalty" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="gang-form" id="blueDevils" style="display:none;">
-        <div class="card">
-          <h3>Los Blue Devil's Application</h3>
-          <form data-gang="Los Blue Devil's">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
-            <textarea name="motivation" placeholder="Why join Los Blue Devil's?" required></textarea>
-            <input type="text" name="territory" placeholder="Territory you'd like to represent" required>
-            <textarea name="scenario" placeholder="RP scenario handling rival gang" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="gang-form" id="graveDiggas" style="display:none;">
-        <div class="card">
-          <h3>Grave Diggas Application</h3>
-          <form data-gang="Grave Diggas">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
-            <textarea name="motivation" placeholder="Why join Grave Diggas?" required></textarea>
-            <input type="text" name="activities" placeholder="Preferred Activities" required>
-            <textarea name="scenario" placeholder="Heist planning RP scenario" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Departments -->
-    <section id="departments" class="tab-content">
-      <div class="card">
-        <h3>Department Applications</h3>
-        <button class="dept-btn" data-dept="SASP">SASP</button>
-        <button class="dept-btn" data-dept="BCSO">BCSO</button>
-        <button class="dept-btn" data-dept="LSPD">LSPD</button>
-      </div>
-      <div class="dept-form" id="SASP" style="display:none;">
-        <div class="card">
-          <form data-dept="SASP">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join SASP?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="dept-form" id="BCSO" style="display:none;">
-        <div class="card">
-          <form data-dept="BCSO">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join BCSO?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="dept-form" id="LSPD" style="display:none;">
-        <div class="card">
-          <form data-dept="LSPD">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join LSPD?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Civilians -->
-    <section id="civilians" class="tab-content">
-      <div class="card">
-        <h3>Civilian Applications</h3>
-        <button class="civ-btn" data-civ="DOJ">Department of Justice</button>
-        <button class="civ-btn" data-civ="SAM">San Andreas Military</button>
-        <button class="civ-btn" data-civ="SADOT">SADOT Gruppe 6</button>
-      </div>
-      <div class="civ-form" id="DOJ" style="display:none;">
-        <div class="card">
-          <form data-civ="DOJ">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join DOJ?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="civ-form" id="SAM" style="display:none;">
-        <div class="card">
-          <form data-civ="SAM">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join SAM?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="civ-form" id="SADOT" style="display:none;">
-        <div class="card">
-          <form data-civ="SADOT">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join SADOT?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Teams -->
-    <section id="teams" class="tab-content">
-      <div class="card">
-        <h3>Team Applications</h3>
-        <button class="team-btn" data-team="Event">Event Team</button>
-        <button class="team-btn" data-team="Stream">Stream Team</button>
-        <button class="team-btn" data-team="Staff">Staff Team</button>
-      </div>
-      <div class="team-form" id="Event" style="display:none;">
-        <div class="card">
-          <form data-team="Event">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join Event Team?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="team-form" id="Stream" style="display:none;">
-        <div class="card">
-          <form data-team="Stream">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join Stream Team?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-      <div class="team-form" id="Staff" style="display:none;">
-        <div class="card">
-          <form data-team="Staff">
-            <input type="text" name="name" placeholder="In-Game Name" required>
-            <input type="text" name="discord" placeholder="Discord ID" required>
-            <textarea name="motivation" placeholder="Why join Staff Team?" required></textarea>
-            <button type="submit">Submit Application</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Support Tickets -->
-    <section id="support" class="tab-content">
-      <div class="card">
-        <h3>Open a Support Ticket</h3>
-        <form id="supportTicketForm">
-          <input type="text" name="discord" placeholder="Your Discord ID (numeric)" required>
-          <select name="department" required>
-            <option value="" disabled selected>Select Department</option>
-            <option value="Internal Operations">Internal Operations</option>
-            <option value="Staff Director">Staff Director</option>
-            <option value="ESD">ESD</option>
-            <option value="Support Director">Support Director</option>
-            <option value="Support">Support</option>
-          </select>
-          <textarea name="issue" placeholder="Describe your issue" required></textarea>
-          <button type="submit">Submit Ticket</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- Changelog -->
-    <section id="changelog" class="tab-content">
-      <div class="card">
-        <h3>Post a Server Changelog</h3>
-        <form id="changelogForm">
-          <input type="text" name="version" placeholder="Version / Update Title" required>
-          <textarea name="details" placeholder="Describe the update" required></textarea>
-          <button type="submit">Submit Changelog</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- Discord -->
-    <section id="discord" class="tab-content">
-      <div class="card">
-        <h2>Join our Discord!</h2>
-        <p>Connect with the community and staff in real-time.</p>
-        <a href="https://discord.gg/6PzCRaXv" class="discord-btn" target="_blank">Join Discord</a>
-      </div>
-    </section>
-
+<div id="loginModal">
+  <div class="card" style="width:300px">
+    <h2>Staff Login</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
   </div>
 </div>
 
-<footer>&copy; 2026 Golden State Roleplay | All Rights Reserved</footer>
+<div class="container">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<div class="logo">GSRP Panel</div>
+
+<div class="nav-link active" data-tab="home">Home</div>
+<div class="nav-link" data-tab="gangs">Gangs</div>
+<div class="nav-link" data-tab="departments">Departments</div>
+<div class="nav-link" data-tab="teams">Teams</div>
+<div class="nav-link" data-tab="support">Support</div>
+<div class="nav-link" onclick="openLogin()">🔐 Login</div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- HOME -->
+<div id="home" class="tab active">
+<div class="card">
+<h2>Welcome to Golden State RP</h2>
+<p>Control Panel & Applications</p>
+</div>
+
+<div class="card">
+<h3>Quick Access</h3>
+<a href="https://discord.gg/6PzCRaXv" target="_blank">
+<button>Join Discord</button>
+</a>
+
+<button onclick="alert('Add your server connect link')">Join Server</button>
+<button onclick="alert('Add socials links')">Socials</button>
+</div>
+</div>
+
+<!-- GANG APPLICATION -->
+<div id="gangs" class="tab">
+<div class="card">
+<h2>Gang Application</h2>
+
+<form id="gangForm">
+<input placeholder="In-Game Name" required>
+<input placeholder="Discord ID" required>
+
+<textarea placeholder="Why do you want to join this gang?" required></textarea>
+
+<textarea placeholder="Describe a loyalty RP scenario (detailed)" required></textarea>
+
+<textarea placeholder="How would you handle conflict with another gang?" required></textarea>
+
+<textarea placeholder="What can you bring to the gang?" required></textarea>
+
+<button>Submit Application</button>
+</form>
+</div>
+</div>
+
+<!-- DEPARTMENTS -->
+<div id="departments" class="tab">
+<div class="card">
+<h2>Department Application</h2>
+
+<form>
+<input placeholder="Full Name" required>
+<input placeholder="Discord ID" required>
+
+<textarea placeholder="Why do you want to join Law Enforcement?" required></textarea>
+
+<textarea placeholder="Explain a traffic stop scenario in detail" required></textarea>
+
+<textarea placeholder="How would you handle a fleeing suspect?" required></textarea>
+
+<textarea placeholder="What does good RP mean to you?" required></textarea>
+
+<button>Submit Application</button>
+</form>
+</div>
+</div>
+
+<!-- TEAMS -->
+<div id="teams" class="tab">
+<div class="card">
+<h2>Team Application</h2>
+
+<form>
+<input placeholder="Name" required>
+<input placeholder="Discord ID" required>
+
+<textarea placeholder="Why do you want this position?" required></textarea>
+
+<textarea placeholder="Describe a time you handled responsibility" required></textarea>
+
+<textarea placeholder="How active are you?" required></textarea>
+
+<button>Submit</button>
+</form>
+</div>
+</div>
+
+<!-- SUPPORT -->
+<div id="support" class="tab">
+<div class="card">
+<h2>Support Ticket</h2>
+
+<form>
+<input placeholder="Discord ID" required>
+<textarea placeholder="Explain your issue" required></textarea>
+<button>Submit Ticket</button>
+</form>
+</div>
+</div>
+
+</div>
+</div>
 
 <script>
-// ===== Tabs =====
-const tabs = document.querySelectorAll('.nav-link');
-const contents = document.querySelectorAll('.tab-content');
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    contents.forEach(c => c.classList.remove('active'));
-    document.getElementById(tab.dataset.tab).classList.add('active');
-  });
+// TABS
+document.querySelectorAll('.nav-link').forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.getElementById(btn.dataset.tab)?.classList.add('active');
+};
 });
 
-// ===== Gang/Dept/Civ/Team selection =====
-function setupToggle(btnSelector, formSelector){
-  const btns = document.querySelectorAll(btnSelector);
-  const forms = document.querySelectorAll(formSelector);
-  btns.forEach(btn => {
-    btn.addEventListener('click', ()=>{
-      forms.forEach(f=>f.style.display='none');
-      const id = btn.dataset[btnSelector.replace('.','')];
-      document.getElementById(id).style.display='block';
-    });
-  });
+// LOGIN SYSTEM
+const accounts=[
+{u:"esd1",p:"123",r:"ESD"},
+{u:"esd2",p:"123",r:"ESD"},
+{u:"esd3",p:"123",r:"ESD"},
+
+{u:"civ1",p:"123",r:"CIV"},
+{u:"civ2",p:"123",r:"CIV"},
+
+{u:"staff1",p:"123",r:"STAFF"},
+{u:"staff2",p:"123",r:"STAFF"}
+];
+
+function openLogin(){
+document.getElementById("loginModal").style.display="flex";
 }
-setupToggle('.gang-btn','.gang-form');
-setupToggle('.dept-btn','.dept-form');
-setupToggle('.civ-btn','.civ-form');
-setupToggle('.team-btn','.team-form');
 
-// ===== Webhooks =====
-// Gang/Dept/Civ/Team & Support Tickets Webhooks remain same as before
-// You can reuse your previous webhook JS here for submissions
+function login(){
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
 
-// ===== Mini Bear Particles =====
-const canvas = document.getElementById('bearCanvas');
-const ctx = canvas.getContext('2d');
-let w=canvas.width=window.innerWidth; let h=canvas.height=window.innerHeight;
-window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;});
-const bearImg=new Image(); bearImg.src='https://i.imgur.com/Z5zZqT3.png';
-const particles=[]; for(let i=0;i<30;i++){particles.push({x:Math.random()*w,y:Math.random()*h,size:Math.random()*20+10,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.2});}
-function animate(){ctx.clearRect(0,0,w,h); particles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.drawImage(bearImg,p.x,p.y,p.size,p.size);});requestAnimationFrame(animate);}
-bearImg.onload=()=>animate();
+let acc=accounts.find(a=>a.u===u && a.p===p);
+
+if(acc){
+alert("Logged in as "+acc.r);
+document.getElementById("loginModal").style.display="none";
+}else{
+alert("Invalid");
+}
+}
 </script>
+
 </body>
 </html>
