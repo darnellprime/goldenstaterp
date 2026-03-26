@@ -1,218 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Golden State Roleplay</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golden State Roleplay</title>
+  <style>
+    /* ========== Reset & Base ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #0b0c10; color: #c5c6c7; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #111, #000);
-  color: white;
-}
+    /* ========== Header ========== */
+    header {
+      background: linear-gradient(90deg, #1f2833, #45a29e);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #66fcf1;
+    }
+    header h1 { color: #66fcf1; font-size: 1.8rem; letter-spacing: 1px; }
 
-/* NAVBAR */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 40px;
-  border-bottom: 1px solid #222;
-}
+    nav ul { display: flex; gap: 2rem; }
+    nav li { cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: 0.3s; }
+    nav li:hover, nav li.active { background: #66fcf1; color: #0b0c10; }
 
-.logo {
-  font-size: 22px;
-  font-weight: bold;
-}
+    /* ========== Tabs ========== */
+    .tab-content { padding: 2rem; display: none; }
+    .tab-content.active { display: block; }
 
-.nav-buttons a {
-  margin-left: 10px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  text-decoration: none;
-  cursor: pointer;
-}
+    /* ========== Card Styles ========== */
+    .card {
+      background: #1f2833;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
 
-.join {
-  background: gold;
-  color: black;
-}
+    /* ========== Discord Button ========== */
+    .discord-btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background: #7289da;
+      color: #fff;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.3s;
+      margin-top: 1rem;
+    }
+    .discord-btn:hover { background: #5b6eae; }
 
-.discord {
-  border: 1px solid #555;
-  color: white;
-}
-
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 80px 20px;
-}
-
-.hero h1 {
-  font-size: 55px;
-  background: linear-gradient(90deg, gold, deepskyblue);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-/* TABS */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin: 20px;
-  flex-wrap: wrap;
-}
-
-.tab-btn {
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: 1px solid #444;
-  background: #111;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.tab-btn:hover {
-  background: #222;
-}
-
-.tab-btn.active {
-  background: gold;
-  color: black;
-}
-
-/* CONTENT */
-.tab-content {
-  display: none;
-  padding: 40px;
-}
-
-.active-content {
-  display: block;
-}
-
-/* CARDS */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: #111;
-  padding: 20px;
-  border-radius: 20px;
-  border: 1px solid #222;
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-/* FOOTER */
-.footer {
-  text-align: center;
-  padding: 20px;
-  border-top: 1px solid #222;
-  color: #777;
-}
-</style>
+    /* ========== Footer ========== */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #1f2833;
+      color: #45a29e;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="logo">Golden State RP</div>
-  <div class="nav-buttons">
-    <a class="join">Play</a>
-    <a class="discord">Discord</a>
-  </div>
-</div>
+  <!-- ========== HEADER ========== -->
+  <header>
+    <h1>Golden State RP</h1>
+    <nav>
+      <ul>
+        <li class="tab-link active" data-tab="gangs">Gangs</li>
+        <li class="tab-link" data-tab="civ">Civilian Operations</li>
+        <li class="tab-link" data-tab="support">Support Tickets</li>
+        <li class="tab-link" data-tab="discord">Discord</li>
+      </ul>
+    </nav>
+  </header>
 
-<!-- HERO -->
-<div class="hero">
-  <h1>Golden State Roleplay</h1>
-  <p>Immersive. Custom. Next Level RP.</p>
-</div>
+  <!-- ========== TAB CONTENT ========== -->
+  <main>
+    <section id="gangs" class="tab-content active">
+      <div class="card">
+        <h2>Gang Listings</h2>
+        <p>View all active gangs and their leaders in Golden State RP.</p>
+      </div>
+      <div class="card">
+        <h2>Gang Operations</h2>
+        <p>Information on territory control and ongoing gang operations.</p>
+      </div>
+    </section>
 
-<!-- TAB BUTTONS -->
-<div class="tabs">
-  <button class="tab-btn active" onclick="openTab('gangs')">Gangs</button>
-  <button class="tab-btn" onclick="openTab('civ')">Civilian Operations</button>
-  <button class="tab-btn" onclick="openTab('support')">Support Tickets</button>
-  <button class="tab-btn" onclick="openTab('discord')">Discord</button>
-</div>
+    <section id="civ" class="tab-content">
+      <div class="card">
+        <h2>Civilian Jobs</h2>
+        <p>All civilian occupations and their details in-game.</p>
+      </div>
+      <div class="card">
+        <h2>Events & Activities</h2>
+        <p>Community events and civilian operations happening now.</p>
+      </div>
+    </section>
 
-<!-- TAB CONTENTS -->
+    <section id="support" class="tab-content">
+      <div class="card">
+        <h2>Open Tickets</h2>
+        <p>Check or submit support tickets for assistance from admins.</p>
+      </div>
+      <div class="card">
+        <h2>Closed Tickets</h2>
+        <p>Review resolved support tickets and their outcomes.</p>
+      </div>
+    </section>
 
-<div id="gangs" class="tab-content active-content">
-  <div class="grid">
-    <div class="card">
-      <h3>Street Gangs</h3>
-      <p>Build your crew, control territory, dominate the city.</p>
-    </div>
-    <div class="card">
-      <h3>Organized Crime</h3>
-      <p>Run high-level operations with structure and strategy.</p>
-    </div>
-  </div>
-</div>
+    <section id="discord" class="tab-content">
+      <div class="card">
+        <h2>Join our Discord!</h2>
+        <p>Connect with the community and staff in real-time.</p>
+        <a href="https://discord.gg/GH3cED6x" class="discord-btn" target="_blank">Join Discord</a>
+      </div>
+    </section>
+  </main>
 
-<div id="civ" class="tab-content">
-  <div class="grid">
-    <div class="card">
-      <h3>Businesses</h3>
-      <p>Own shops, run services, build your empire.</p>
-    </div>
-    <div class="card">
-      <h3>Legal Jobs</h3>
-      <p>Taxi, trucking, EMS, and more realistic careers.</p>
-    </div>
-  </div>
-</div>
+  <footer>
+    &copy; 2026 Golden State Roleplay | All Rights Reserved
+  </footer>
 
-<div id="support" class="tab-content">
-  <div class="grid">
-    <div class="card">
-      <h3>Need Help?</h3>
-      <p>Open a support ticket through Discord for fast assistance.</p>
-    </div>
-  </div>
-</div>
+  <!-- ========== TAB SCRIPT ========== -->
+  <script>
+    const tabs = document.querySelectorAll('.tab-link');
+    const contents = document.querySelectorAll('.tab-content');
 
-<div id="discord" class="tab-content">
-  <div class="grid">
-    <div class="card">
-      <h3>Join Our Discord</h3>
-      <p>Stay connected with the community and staff team.</p>
-      <br>
-      <a href="#" style="color: gold;">Join Now</a>
-    </div>
-  </div>
-</div>
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
 
-<!-- FOOTER -->
-<div class="footer">
-  © 2026 Golden State Roleplay
-</div>
-
-<script>
-function openTab(tabName) {
-  let contents = document.querySelectorAll('.tab-content');
-  let buttons = document.querySelectorAll('.tab-btn');
-
-  contents.forEach(c => c.classList.remove('active-content'));
-  buttons.forEach(b => b.classList.remove('active'));
-
-  document.getElementById(tabName).classList.add('active-content');
-  event.target.classList.add('active');
-}
-</script>
-
+        contents.forEach(c => c.classList.remove('active'));
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
