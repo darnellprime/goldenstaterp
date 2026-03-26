@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Golden State Roleplay</title>
+<title>Golden State RP</title>
 <style>
-/* ===== Base ===== */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-body { background:#0a0a0a; color:#f5c518; transition:0.3s; }
-a{text-decoration:none;color:inherit;}
-ul{list-style:none;}
+* {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif;}
+body {background:#0a0a0a; color:#f5c518;}
 header{background:linear-gradient(90deg,#000,#1c1c1c);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #f5c518;}
 header h1{color:#f5c518;font-size:2rem;letter-spacing:2px;}
 nav ul{display:flex;gap:1.5rem;}
@@ -42,7 +39,6 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
 </header>
 
 <main>
-<!-- ===== GANGS TAB ===== -->
 <section id="gangs" class="tab-content active">
   <div class="card">
     <h2>Select a Gang to Apply</h2>
@@ -59,7 +55,7 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <h3>400 Hustlers Application</h3>
       <form data-gang="400 Hustlers">
         <input type="text" name="name" placeholder="In-Game Name" required>
-        <input type="text" name="discord" placeholder="Discord ID (e.g. User#1234)" required>
+        <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
         <textarea name="motivation" placeholder="Why join 400 Hustlers?" required></textarea>
         <input type="text" name="role" placeholder="Preferred Role" required>
         <textarea name="scenario" placeholder="RP Scenario showing loyalty" required></textarea>
@@ -74,7 +70,7 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <h3>Los Blue Devil's Application</h3>
       <form data-gang="Los Blue Devil's">
         <input type="text" name="name" placeholder="In-Game Name" required>
-        <input type="text" name="discord" placeholder="Discord ID" required>
+        <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
         <textarea name="motivation" placeholder="Why join Los Blue Devil's?" required></textarea>
         <input type="text" name="territory" placeholder="Territory you'd like to represent" required>
         <textarea name="scenario" placeholder="RP scenario handling rival gang" required></textarea>
@@ -89,7 +85,7 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
       <h3>Grave Diggas Application</h3>
       <form data-gang="Grave Diggas">
         <input type="text" name="name" placeholder="In-Game Name" required>
-        <input type="text" name="discord" placeholder="Discord ID" required>
+        <input type="text" name="discord" placeholder="Discord ID (numeric)" required>
         <textarea name="motivation" placeholder="Why join Grave Diggas?" required></textarea>
         <input type="text" name="activities" placeholder="Preferred Activities" required>
         <textarea name="scenario" placeholder="Heist planning RP scenario" required></textarea>
@@ -99,32 +95,29 @@ footer{text-align:center;padding:1rem;background:#1a1a1a;color:#f5c518;font-size
   </div>
 </section>
 
-<!-- ===== CIVILIAN OPERATIONS TAB ===== -->
 <section id="civ" class="tab-content">
   <div class="card"><h2>Civilian Jobs</h2><p>All civilian occupations and their details in-game.</p></div>
   <div class="card"><h2>Events & Activities</h2><p>Community events and civilian operations happening now.</p></div>
 </section>
 
-<!-- ===== SUPPORT TICKETS TAB ===== -->
 <section id="support" class="tab-content">
   <div class="card"><h2>Open Tickets</h2><p>Check or submit support tickets for assistance from admins.</p></div>
   <div class="card"><h2>Closed Tickets</h2><p>Review resolved support tickets and their outcomes.</p></div>
 </section>
 
-<!-- ===== DISCORD TAB ===== -->
 <section id="discord" class="tab-content">
   <div class="card">
     <h2>Join our Discord!</h2>
     <p>Connect with the community and staff in real-time.</p>
-    <a href="https://discord.gg/6PzCRaXv" class="discord-btn" target="_blank">Join Discord</a>
+    <a href="https://discord.gg/YOUR_DISCORD_LINK" class="discord-btn" target="_blank">Join Discord</a>
   </div>
 </section>
-</main>
 
+</main>
 <footer>&copy; 2026 Golden State Roleplay | All Rights Reserved</footer>
 
 <script>
-// Main tab navigation
+// Tab navigation
 const tabs = document.querySelectorAll('.tab-link');
 const contents = document.querySelectorAll('.tab-content');
 tabs.forEach(tab => {
@@ -136,7 +129,7 @@ tabs.forEach(tab => {
   });
 });
 
-// Gang selection inside Gangs tab
+// Gang selection
 const gangButtons = document.querySelectorAll('.gang-btn');
 const gangForms = document.querySelectorAll('.gang-form');
 gangButtons.forEach(btn => {
@@ -152,16 +145,17 @@ forms.forEach(form => {
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const data = new FormData(form);
+    const discordID = data.get('discord').replace(/[^0-9]/g,''); // ensure numeric
+    const mention = `<@${discordID}>`; // auto ping
     const payload = {
       content: `**New Gang Application: ${form.dataset.gang}**\n` +
                `**Name:** ${data.get('name')}\n` +
-               `**Discord:** ${data.get('discord')}\n` +
+               `**Discord:** ${mention}\n` +
                `**Motivation:** ${data.get('motivation')}\n` +
                `${data.get('role') ? '**Role:** ' + data.get('role') + '\n' : ''}` +
                `${data.get('territory') ? '**Territory:** ' + data.get('territory') + '\n' : ''}` +
                `${data.get('activities') ? '**Activities:** ' + data.get('activities') + '\n' : ''}` +
-               `**Scenario:** ${data.get('scenario')}\n\n` +
-               `Staff: Reply with Accept/Deny to ping applicant.`
+               `**Scenario:** ${data.get('scenario')}`
     };
     try {
       await fetch('https://discord.com/api/webhooks/1479020035472228544/PTsPzAJktbrMmH3_HBrgnudssWFxwdZ4JChZfsEhSk1iDox0sETtOEGYC41Xja1KOI0h', {
@@ -169,10 +163,10 @@ forms.forEach(form => {
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload)
       });
-      alert('Application submitted successfully!');
+      alert('Application submitted! Staff will review and respond.');
       form.reset();
     } catch(err){
-      alert('Failed to submit application. Check webhook URL.');
+      alert('Failed to submit. Check webhook URL.');
       console.error(err);
     }
   });
